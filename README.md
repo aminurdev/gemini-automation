@@ -26,6 +26,10 @@ Designed based on Gemini's Angular + Quill rich-text input architecture, with a 
 - ⏯️ **Full Queue Control**: Start, Pause, Resume, Stop, and Clear controls.
 - 📊 **Live Progress & Queue Preview**: Visual indicator for each prompt (`⏳ Pending`, `🔄 Generating`, `✅ Done`, `⚠️ Error`).
 - 🔔 **Finish Chime & Auto-Scroll**: Plays an audio chime when the entire batch is complete and auto-scrolls down to keep newly generated images in view.
+- 🌓 **Dark & Light Mode**:
+  - One-click toggle between sleek dark mode and clean light mode via the header button (`🌙` / `☀️`) or the settings drawer.
+  - Automatically matches Gemini's theme or system color preference by default.
+  - Theme choices are saved in `chrome.storage.local` across sessions.
 - 💾 **State Persistence**: Preserves your prompts and settings in `chrome.storage.local`.
 
 ---

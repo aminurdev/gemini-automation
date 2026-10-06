@@ -18,6 +18,7 @@
     isPaused: false,
     isPanelOpen: true,
     position: 'top-right', // 'top-right' or 'bottom-right'
+    theme: 'dark',         // 'dark' or 'light'
     cooldownDelay: 5,      // seconds to wait after generation completes
     maxTimeout: 120,       // maximum seconds to wait per prompt
     autoScroll: true,
@@ -71,6 +72,17 @@
         }
         if (res.gbi_position) {
           setPosition(res.gbi_position);
+        }
+        if (res.gbi_theme) {
+          setTheme(res.gbi_theme);
+        } else {
+          // Auto-detect based on Gemini UI class or system preference
+          const isGeminiLight =
+            document.body.classList.contains('lm-enabled') ||
+            document.documentElement.classList.contains('lm-enabled') ||
+            document.querySelector('.lm-enabled') !== null ||
+            (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
+          setTheme(isGeminiLight ? 'light' : 'dark');
         }
       });
     }
@@ -766,6 +778,7 @@
           <span class="gbi-status-chip status-idle" id="gbi-status-chip">Idle</span>
         </div>
         <div class="gbi-header-actions">
+          <button class="gbi-icon-btn" id="gbi-theme-btn" title="Toggle Theme (Dark / Light)">🌙</button>
           <button class="gbi-icon-btn" id="gbi-settings-btn" title="Options">⚙</button>
           <button class="gbi-icon-btn" id="gbi-pos-btn" title="Toggle Position (Top / Bottom)">↕</button>
           <button class="gbi-icon-btn" id="gbi-min-btn" title="Minimize">✕</button>
@@ -776,6 +789,13 @@
       <div class="gbi-body">
         <!-- Collapsible Settings Drawer -->
         <div class="gbi-settings-drawer gbi-collapsed" id="gbi-settings-drawer">
+          <div class="gbi-config-row">
+            <span style="color:var(--gbi-text-sub); font-size:11.5px;">Theme</span>
+            <div class="gbi-theme-toggle-group">
+              <button type="button" class="gbi-theme-pill-btn active" id="gbi-theme-dark-btn">🌙 Dark</button>
+              <button type="button" class="gbi-theme-pill-btn" id="gbi-theme-light-btn">☀️ Light</button>
+            </div>
+          </div>
           <div class="gbi-config-row">
             <label>
               <input type="checkbox" class="gbi-checkbox" id="gbi-prefix-cb" checked>
@@ -934,6 +954,31 @@
 
     const autoDownloadCb = document.getElementById('gbi-autodownload-cb');
     const downloadAllBtn = document.getElementById('gbi-download-all-btn');
+    const themeBtn = document.getElementById('gbi-theme-btn');
+    const themeDarkBtn = document.getElementById('gbi-theme-dark-btn');
+    const themeLightBtn = document.getElementById('gbi-theme-light-btn');
+
+    if (themeBtn) {
+      themeBtn.addEventListener('click', toggleTheme);
+    }
+
+    if (themeDarkBtn) {
+      themeDarkBtn.addEventListener('click', () => {
+        setTheme('dark');
+        if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+          chrome.storage.local.set({ gbi_theme: 'dark' });
+        }
+      });
+    }
+
+    if (themeLightBtn) {
+      themeLightBtn.addEventListener('click', () => {
+        setTheme('light');
+        if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+          chrome.storage.local.set({ gbi_theme: 'light' });
+        }
+      });
+    }
 
     if (autoDownloadCb) {
       autoDownloadCb.addEventListener('change', (e) => {
@@ -1020,6 +1065,43 @@
         pill.style.bottom = 'auto';
         pill.style.top = '14px';
       }
+    }
+  }
+
+  function setTheme(theme) {
+    state.theme = theme === 'light' ? 'light' : 'dark';
+    const panel = document.getElementById('gbi-main-panel');
+    const pill = document.getElementById('gbi-floating-pill');
+    const themeBtn = document.getElementById('gbi-theme-btn');
+    const darkPill = document.getElementById('gbi-theme-dark-btn');
+    const lightPill = document.getElementById('gbi-theme-light-btn');
+
+    if (state.theme === 'light') {
+      if (panel) panel.classList.add('gbi-theme-light');
+      if (pill) pill.classList.add('gbi-theme-light');
+      if (themeBtn) {
+        themeBtn.textContent = '☀️';
+        themeBtn.title = 'Current: Light Mode (Click for Dark)';
+      }
+      if (darkPill) darkPill.classList.remove('active');
+      if (lightPill) lightPill.classList.add('active');
+    } else {
+      if (panel) panel.classList.remove('gbi-theme-light');
+      if (pill) pill.classList.remove('gbi-theme-light');
+      if (themeBtn) {
+        themeBtn.textContent = '🌙';
+        themeBtn.title = 'Current: Dark Mode (Click for Light)';
+      }
+      if (darkPill) darkPill.classList.add('active');
+      if (lightPill) lightPill.classList.remove('active');
+    }
+  }
+
+  function toggleTheme() {
+    const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ gbi_theme: state.theme });
     }
   }
 
