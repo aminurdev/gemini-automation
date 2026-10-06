@@ -417,6 +417,36 @@
   cursor: not-allowed;
 }
 
+.gbi-btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--gbi-surface);
+  border: 1px solid var(--gbi-border);
+  color: var(--gbi-text);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.gbi-btn-secondary:hover {
+  background: var(--gbi-surface-hover);
+  border-color: var(--gbi-border-hover);
+  color: #ffffff;
+}
+
+.gbi-btn-secondary:active {
+  background: var(--gbi-surface-active);
+  transform: translateY(1px);
+}
+
 /* Progress & Status (Ultra-Slim) */
 .gbi-status-bar {
   display: flex;

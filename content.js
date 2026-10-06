@@ -21,6 +21,7 @@
     cooldownDelay: 5,      // seconds to wait after generation completes
     maxTimeout: 120,       // maximum seconds to wait per prompt
     autoScroll: true,
+    autoDownload: true,    // auto-download generated images
     addPrefix: true,
     prefixText: 'Generate an image of: ',
     queueStatus: []        // Array of 'pending' | 'running' | 'done' | 'error'
@@ -62,6 +63,11 @@
             const cb = document.getElementById('gbi-autoscroll-cb');
             if (cb) cb.checked = state.autoScroll;
           }
+          if (res.gbi_config.autoDownload !== undefined) {
+            state.autoDownload = res.gbi_config.autoDownload;
+            const cb = document.getElementById('gbi-autodownload-cb');
+            if (cb) cb.checked = state.autoDownload;
+          }
         }
         if (res.gbi_position) {
           setPosition(res.gbi_position);
@@ -84,7 +90,8 @@
           cooldownDelay: state.cooldownDelay,
           addPrefix: state.addPrefix,
           prefixText: state.prefixText,
-          autoScroll: state.autoScroll
+          autoScroll: state.autoScroll,
+          autoDownload: state.autoDownload
         },
         gbi_position: state.position
       });
@@ -152,6 +159,267 @@
     }
 
     return false;
+  }
+
+  // ==========================================
+  // Image Download Automation
+  // ==========================================
+  function findDownloadButtons(onlyNew = false) {
+    const matched = new Set();
+
+    // 1. Angular component tag: <download-generated-image-button>
+    document.querySelectorAll('download-generated-image-button').forEach((comp) => {
+      const btn = comp.querySelector('button') || comp;
+      matched.add(btn);
+    });
+
+    // 2. data-test-id="download-generated-image-button"
+    document.querySelectorAll('[data-test-id="download-generated-image-button"]').forEach((el) => {
+      const btn = el.tagName && el.tagName.toLowerCase() === 'button' ? el : el.querySelector('button');
+      if (btn) matched.add(btn);
+      else matched.add(el);
+    });
+
+    // 3. aria-label and tooltips matching download
+    const ariaSelectors = [
+      'button[aria-label="Download full-sized image"]',
+      'button[aria-label*="Download full-sized"]',
+      'button[aria-label*="Download full size"]',
+      'button[aria-label*="Download image"]',
+      'gem-icon-button[arialabel="Download full-sized image"] button',
+      'gem-icon-button[gemtooltip="Download full size"] button',
+      'gem-icon-button[gemtooltip*="Download"] button'
+    ];
+    for (const sel of ariaSelectors) {
+      document.querySelectorAll(sel).forEach((btn) => matched.add(btn));
+    }
+
+    // 4. mat-icon with download icon
+    document.querySelectorAll('mat-icon[data-mat-icon-name="download"], mat-icon[fonticon="download"]').forEach((icon) => {
+      const btn = icon.closest('button');
+      if (btn) matched.add(btn);
+    });
+
+    const list = Array.from(matched);
+
+    if (onlyNew) {
+      return list.filter((btn) => {
+        const parentComp = btn.closest('download-generated-image-button');
+        const isDownloaded =
+          btn.getAttribute('data-gbi-downloaded') === 'true' ||
+          btn.dataset.gbiDownloaded === 'true' ||
+          (parentComp && (parentComp.getAttribute('data-gbi-downloaded') === 'true' || parentComp.dataset.gbiDownloaded === 'true'));
+        return !isDownloaded;
+      });
+    }
+
+    return list;
+  }
+
+  function markExistingImagesAsDownloaded() {
+    const existing = findDownloadButtons(false);
+    existing.forEach((btn) => {
+      btn.setAttribute('data-gbi-downloaded', 'true');
+      btn.dataset.gbiDownloaded = 'true';
+      const comp = btn.closest('download-generated-image-button');
+      if (comp) {
+        comp.setAttribute('data-gbi-downloaded', 'true');
+        comp.dataset.gbiDownloaded = 'true';
+      }
+    });
+    console.log(`[GBI] Marked ${existing.length} existing image download button(s) as already processed.`);
+  }
+
+  function isGeminiDownloading() {
+    // Detect Gemini's "Downloading full size…" snackbar (extended-snackbar / mat-snack-bar-container)
+    const snackbars = document.querySelectorAll(
+      'extended-snackbar [data-test-id="label"], mat-snack-bar-container .mat-mdc-snack-bar-label, mat-snack-bar-container, extended-snackbar'
+    );
+    for (const el of snackbars) {
+      const text = el.textContent || '';
+      if (text.includes('Downloading full size') || text.toLowerCase().includes('downloading')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  async function waitForDownloadToComplete(signal, maxWaitMs = 45000) {
+    // 1. Wait up to 4s for the "Downloading full size…" snackbar to appear
+    const appearStart = Date.now();
+    let appeared = false;
+
+    while (Date.now() - appearStart < 4000) {
+      if (signal?.aborted) return;
+      if (isGeminiDownloading()) {
+        appeared = true;
+        break;
+      }
+      await delay(150);
+    }
+
+    // 2. If the snackbar appeared or is active, wait until it disappears (download completed!)
+    if (appeared || isGeminiDownloading()) {
+      const downloadStart = Date.now();
+      while (isGeminiDownloading()) {
+        if (signal?.aborted) return;
+        const elapsed = Math.round((Date.now() - downloadStart) / 1000);
+        if (Date.now() - downloadStart > maxWaitMs) {
+          console.warn('[GBI] Download snackbar wait timeout exceeded.');
+          break;
+        }
+        updateStatus(`Downloading full size image... (${elapsed}s)`, true);
+        await delay(350);
+      }
+      // 3. Cooldown delay after snackbar closes to allow Gemini's internal single-download state to reset
+      await delay(1200);
+    } else {
+      // If snackbar wasn't caught (e.g. instant or browser prompt), wait safety fallback
+      await delay(2000);
+    }
+  }
+
+  async function triggerDownloadButton(btn) {
+    if (!btn) return false;
+
+    // Mark as downloaded immediately so it won't be processed again
+    btn.setAttribute('data-gbi-downloaded', 'true');
+    btn.dataset.gbiDownloaded = 'true';
+    const comp = btn.closest('download-generated-image-button');
+    if (comp) {
+      comp.setAttribute('data-gbi-downloaded', 'true');
+      comp.dataset.gbiDownloaded = 'true';
+    }
+
+    // Scroll button gently into view so it is rendered and interactive
+    try {
+      (comp || btn).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (e) {}
+
+    // Reveal on-hover container if hidden
+    const hoverContainer = btn.closest('.on-hover-button') || comp || btn.parentElement;
+    if (hoverContainer) {
+      hoverContainer.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+      hoverContainer.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true }));
+    }
+
+    btn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+    btn.dispatchEvent(new MouseEvent('mouseover', { bubbles: true, cancelable: true }));
+    await delay(120);
+
+    // Focus & dispatch mouse down / pointer down
+    btn.focus();
+    btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+    btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+
+    // Primary action: click
+    btn.click();
+
+    // Dispatch click events
+    btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    btn.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
+    btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+
+    await delay(100);
+    if (hoverContainer) {
+      hoverContainer.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true, cancelable: true }));
+    }
+
+    return true;
+  }
+
+  async function autoDownloadNewImages(signal) {
+    if (!state.autoDownload) return 0;
+
+    updateStatus('Searching for generated images...', true);
+
+    const maxWaitMs = 6000;
+    const intervalMs = 500;
+    let elapsed = 0;
+    let newButtons = [];
+
+    // Poll until download button appears or timeout
+    while (elapsed < maxWaitMs) {
+      if (signal?.aborted) return 0;
+
+      newButtons = findDownloadButtons(true);
+      if (newButtons.length > 0) {
+        // Wait an extra 800ms in case multi-image grid is still rendering remaining buttons
+        await delay(800);
+        newButtons = findDownloadButtons(true);
+        break;
+      }
+
+      await delay(intervalMs);
+      elapsed += intervalMs;
+    }
+
+    if (newButtons.length === 0) {
+      console.log('[GBI] No new generated images detected for auto-download.');
+      return 0;
+    }
+
+    const total = newButtons.length;
+    let downloadedCount = 0;
+
+    // Gemini only allows one download at a time! Process sequentially:
+    for (let idx = 0; idx < total; idx++) {
+      if (signal?.aborted) break;
+
+      const btn = newButtons[idx];
+
+      // Wait if previous download snackbar is still active
+      while (isGeminiDownloading()) {
+        if (signal?.aborted) return downloadedCount;
+        updateStatus('Waiting for previous download to finish...', true);
+        await delay(500);
+      }
+
+      updateStatus(`📥 Downloading image ${idx + 1} of ${total}...`, true);
+      await triggerDownloadButton(btn);
+
+      // Wait for Gemini's "Downloading full size…" snackbar to complete and close!
+      await waitForDownloadToComplete(signal);
+      downloadedCount++;
+    }
+
+    updateStatus(`✅ Downloaded ${downloadedCount} of ${total} image${total > 1 ? 's' : ''}!`);
+    await delay(600);
+    return downloadedCount;
+  }
+
+  async function downloadAllVisibleImages() {
+    const buttons = findDownloadButtons(false);
+    if (buttons.length === 0) {
+      alert('No generated image download buttons found in the current conversation.');
+      return;
+    }
+
+    const total = buttons.length;
+    const confirmed = confirm(
+      `Found ${total} image download button${total > 1 ? 's' : ''}.\n\nGemini downloads one file at a time. The extension will download them one by one as each completes.\n\nProceed?`
+    );
+    if (!confirmed) return;
+
+    let count = 0;
+    for (let idx = 0; idx < total; idx++) {
+      const btn = buttons[idx];
+
+      // Wait if previous download snackbar is still active
+      while (isGeminiDownloading()) {
+        updateStatus('Waiting for previous download to finish...', true);
+        await delay(500);
+      }
+
+      updateStatus(`📥 Downloading image ${idx + 1} of ${total}...`, true);
+      await triggerDownloadButton(btn);
+
+      // Wait for Gemini snackbar to complete
+      await waitForDownloadToComplete(null);
+      count++;
+    }
+
+    updateStatus(`✅ Successfully downloaded ${count} images!`);
   }
 
   // ==========================================
@@ -332,6 +600,11 @@
     executionAbortController = new AbortController();
     const signal = executionAbortController.signal;
 
+    // If starting from the beginning, mark pre-existing chat images so they won't be re-downloaded
+    if (state.currentIndex === 0) {
+      markExistingImagesAsDownloaded();
+    }
+
     try {
       for (let i = state.currentIndex; i < state.prompts.length; i++) {
         if (!state.isRunning) break;
@@ -369,14 +642,21 @@
           // 3. Wait for generation to complete
           await waitForGenerationToComplete(signal);
 
+          // 4. Auto-download generated image(s) if enabled
+          let downloadedCount = 0;
+          if (state.autoDownload && !signal.aborted && state.isRunning) {
+            downloadedCount = await autoDownloadNewImages(signal);
+          }
+
           state.queueStatus[i] = 'done';
           renderQueueList();
 
-          // 4. Cooldown delay before next prompt
+          // 5. Cooldown delay before next prompt
           if (i < state.prompts.length - 1 && state.isRunning) {
             let remaining = state.cooldownDelay;
             while (remaining > 0 && state.isRunning && !state.isPaused) {
-              updateStatus(`Waiting ${remaining}s cooldown before next prompt...`);
+              const dlNote = downloadedCount > 0 ? ` (${downloadedCount} img saved)` : '';
+              updateStatus(`Waiting ${remaining}s cooldown before next prompt${dlNote}...`);
               await delay(1000);
               remaining--;
             }
@@ -520,6 +800,16 @@
               <span>Auto-scroll to images</span>
             </label>
           </div>
+          <div class="gbi-config-row">
+            <label>
+              <input type="checkbox" class="gbi-checkbox" id="gbi-autodownload-cb" checked>
+              <span>Auto-download images</span>
+            </label>
+          </div>
+          <button type="button" class="gbi-btn-secondary" id="gbi-download-all-btn">
+            <span>📥</span>
+            <span>Download All Images in Chat</span>
+          </button>
         </div>
 
         <!-- Prompts Textarea Container -->
@@ -640,6 +930,20 @@
         state.autoScroll = e.target.checked;
         saveConfigToStorage();
       });
+    }
+
+    const autoDownloadCb = document.getElementById('gbi-autodownload-cb');
+    const downloadAllBtn = document.getElementById('gbi-download-all-btn');
+
+    if (autoDownloadCb) {
+      autoDownloadCb.addEventListener('change', (e) => {
+        state.autoDownload = e.target.checked;
+        saveConfigToStorage();
+      });
+    }
+
+    if (downloadAllBtn) {
+      downloadAllBtn.addEventListener('click', downloadAllVisibleImages);
     }
 
     // Buttons
