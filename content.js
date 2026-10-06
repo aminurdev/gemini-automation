@@ -18,7 +18,7 @@
     isPaused: false,
     isPanelOpen: true,
     position: 'top-right', // 'top-right' or 'bottom-right'
-    cooldownDelay: 8,      // seconds to wait after generation completes
+    cooldownDelay: 5,      // seconds to wait after generation completes
     maxTimeout: 120,       // maximum seconds to wait per prompt
     autoScroll: true,
     addPrefix: true,
@@ -468,8 +468,8 @@
     pill.id = 'gbi-floating-pill';
     pill.style.display = 'none';
     pill.innerHTML = `
-      <span class="gbi-pill-icon">✨</span>
-      <span>Gemini Bulk Image</span>
+      <span class="gbi-pill-dot"></span>
+      <span>Bulk Prompts</span>
       <span class="gbi-pill-badge" id="gbi-pill-count">0</span>
     `;
     pill.addEventListener('click', togglePanel);
@@ -482,106 +482,87 @@
       <!-- Header -->
       <div class="gbi-header" id="gbi-header-drag">
         <div class="gbi-header-left">
-          <span style="font-size:16px;">✨</span>
-          <span class="gbi-title">Bulk Image Automator</span>
+          <span class="gbi-title">Bulk Prompts</span>
           <span class="gbi-status-chip status-idle" id="gbi-status-chip">Idle</span>
         </div>
         <div class="gbi-header-actions">
-          <button class="gbi-icon-btn" id="gbi-pos-btn" title="Toggle Position (Top-Right / Bottom-Right)">↕️</button>
-          <button class="gbi-icon-btn" id="gbi-min-btn" title="Minimize Panel">_</button>
+          <button class="gbi-icon-btn" id="gbi-settings-btn" title="Options">⚙</button>
+          <button class="gbi-icon-btn" id="gbi-pos-btn" title="Toggle Position (Top / Bottom)">↕</button>
+          <button class="gbi-icon-btn" id="gbi-min-btn" title="Minimize">✕</button>
         </div>
       </div>
 
       <!-- Body -->
       <div class="gbi-body">
-        <!-- Input Section -->
-        <div>
-          <div class="gbi-label-row">
-            <span class="gbi-label">Prompts (One Per Line)</span>
-            <span class="gbi-count-badge" id="gbi-count-badge">0 Prompts</span>
-          </div>
-          <div class="gbi-textarea-wrap">
-            <textarea
-              class="gbi-textarea"
-              id="gbi-prompts-input"
-              placeholder="Enter your image prompts here, one per line...&#10;e.g.:&#10;Majestic lion with glowing crystal armor&#10;Cozy cyberpunk coffee shop in rainy Tokyo&#10;Vintage 1960s sports car speeding on Mars"
-            ></textarea>
-          </div>
-        </div>
-
-        <!-- Options Group -->
-        <div class="gbi-config-group">
-          <!-- Prefix toggle -->
+        <!-- Collapsible Settings Drawer -->
+        <div class="gbi-settings-drawer gbi-collapsed" id="gbi-settings-drawer">
           <div class="gbi-config-row">
             <label>
               <input type="checkbox" class="gbi-checkbox" id="gbi-prefix-cb" checked>
-              <span>Auto-prepend image prompt prefix</span>
+              <span>Auto prefix</span>
             </label>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="color:var(--gbi-text-muted); font-size:11px;">Delay:</span>
+              <input type="number" class="gbi-number-input" id="gbi-delay-input" min="2" max="60" value="8">
+              <span style="color:var(--gbi-text-muted); font-size:11px;">s</span>
+            </div>
           </div>
           <input
             type="text"
             class="gbi-text-input"
             id="gbi-prefix-input"
             value="Generate an image of: "
-            placeholder="e.g. Generate an image of: "
+            placeholder="Prefix text..."
           >
-
-          <!-- Delay Setting -->
-          <div class="gbi-config-row" style="margin-top: 4px;">
-            <label title="Safety delay after Gemini finishes before sending next prompt">
-              <span>Wait between prompts:</span>
-            </label>
-            <div style="display:flex; align-items:center; gap:4px;">
-              <input type="number" class="gbi-number-input" id="gbi-delay-input" min="3" max="60" value="8">
-              <span style="color:var(--gbi-text-muted); font-size:11.5px;">sec</span>
-            </div>
-          </div>
-
-          <!-- Auto-scroll -->
           <div class="gbi-config-row">
             <label>
               <input type="checkbox" class="gbi-checkbox" id="gbi-autoscroll-cb" checked>
-              <span>Auto-scroll to view new images</span>
+              <span>Auto-scroll to images</span>
             </label>
           </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="gbi-btn-grid">
-          <button class="gbi-btn gbi-btn-primary" id="gbi-start-btn">
-            <span>🚀 Start Generation</span>
-          </button>
-          <button class="gbi-btn gbi-btn-stop" id="gbi-stop-btn" disabled>
-            <span>⏹️ Stop</span>
-          </button>
-          <button class="gbi-btn gbi-btn-clear" id="gbi-clear-btn">
-            <span>🗑️ Clear</span>
-          </button>
+        <!-- Prompts Textarea Container -->
+        <div class="gbi-input-container">
+          <div class="gbi-textarea-wrap">
+            <textarea
+              class="gbi-textarea"
+              id="gbi-prompts-input"
+              placeholder="Enter prompts (one per line)..."
+            ></textarea>
+          </div>
+          <div class="gbi-input-meta">
+            <span class="gbi-count-badge" id="gbi-count-badge">0 prompts</span>
+          </div>
         </div>
 
-        <!-- Progress Card -->
-        <div class="gbi-progress-card">
-          <div class="gbi-progress-header">
-            <span id="gbi-progress-label">Progress: 0 / 0</span>
-            <span id="gbi-progress-percent">0%</span>
-          </div>
+        <!-- Action Controls -->
+        <div class="gbi-controls">
+          <button class="gbi-btn gbi-btn-primary" id="gbi-start-btn">Start</button>
+          <button class="gbi-btn gbi-btn-stop" id="gbi-stop-btn" disabled>Stop</button>
+          <button class="gbi-btn gbi-btn-clear" id="gbi-clear-btn">Clear</button>
+        </div>
+
+        <!-- Status & Progress -->
+        <div class="gbi-status-bar">
           <div class="gbi-progress-track">
             <div class="gbi-progress-bar" id="gbi-progress-bar"></div>
           </div>
-          <div class="gbi-status-msg" id="gbi-status-msg">
-            <span>Ready. Add prompts and click Start.</span>
+          <div class="gbi-status-row">
+            <div class="gbi-status-text" id="gbi-status-msg">
+              <span>Ready</span>
+            </div>
+            <span id="gbi-progress-percent" style="font-size:10.5px; color:var(--gbi-text-muted);">0%</span>
           </div>
         </div>
 
-        <!-- Prompt Queue Drawer -->
-        <div class="gbi-queue-wrap">
+        <!-- Queue Accordion -->
+        <div class="gbi-queue-accordion">
           <div class="gbi-queue-header" id="gbi-queue-toggle">
-            <span>QUEUE PREVIEW</span>
-            <span id="gbi-queue-arrow">▼</span>
+            <span id="gbi-queue-summary">Queue</span>
+            <span id="gbi-queue-arrow" style="font-size:9px;">▶</span>
           </div>
-          <div class="gbi-queue-list" id="gbi-queue-list">
-            <!-- Dynamic Items -->
-          </div>
+          <div class="gbi-queue-list" id="gbi-queue-list"></div>
         </div>
       </div>
     `;
@@ -598,6 +579,8 @@
     const clearBtn = document.getElementById('gbi-clear-btn');
     const minBtn = document.getElementById('gbi-min-btn');
     const posBtn = document.getElementById('gbi-pos-btn');
+    const settingsBtn = document.getElementById('gbi-settings-btn');
+    const settingsDrawer = document.getElementById('gbi-settings-drawer');
     const prefixCb = document.getElementById('gbi-prefix-cb');
     const prefixInput = document.getElementById('gbi-prefix-input');
     const delayInput = document.getElementById('gbi-delay-input');
@@ -616,6 +599,14 @@
           renderQueueList();
           updateProgress();
         }
+      });
+    }
+
+    // Settings Toggle
+    if (settingsBtn && settingsDrawer) {
+      settingsBtn.addEventListener('click', () => {
+        const isCollapsed = settingsDrawer.classList.toggle('gbi-collapsed');
+        settingsBtn.classList.toggle('gbi-active-btn', !isCollapsed);
       });
     }
 
@@ -687,7 +678,7 @@
         const list = document.getElementById('gbi-queue-list');
         const arrow = document.getElementById('gbi-queue-arrow');
         if (list) {
-          const isHidden = list.style.display === 'none';
+          const isHidden = list.style.display === 'none' || !list.style.display;
           list.style.display = isHidden ? 'flex' : 'none';
           if (arrow) arrow.textContent = isHidden ? '▼' : '▶';
         }
@@ -707,23 +698,23 @@
       if (panel) {
         panel.classList.add('gbi-panel-bottom');
         panel.style.top = 'auto';
-        panel.style.bottom = '24px';
+        panel.style.bottom = '20px';
       }
       if (pill) {
         pill.classList.add('gbi-pill-bottom');
         pill.style.top = 'auto';
-        pill.style.bottom = '24px';
+        pill.style.bottom = '20px';
       }
     } else {
       if (panel) {
         panel.classList.remove('gbi-panel-bottom');
         panel.style.bottom = 'auto';
-        panel.style.top = '16px';
+        panel.style.top = '14px';
       }
       if (pill) {
         pill.classList.remove('gbi-pill-bottom');
         pill.style.bottom = 'auto';
-        pill.style.top = '16px';
+        pill.style.top = '14px';
       }
     }
   }
@@ -803,17 +794,19 @@
     const prompts = getPromptsFromInput();
     const countBadge = document.getElementById('gbi-count-badge');
     const pillBadge = document.getElementById('gbi-pill-count');
-    const label = `${prompts.length} ${prompts.length === 1 ? 'Prompt' : 'Prompts'}`;
+    const queueSummary = document.getElementById('gbi-queue-summary');
+    const label = `${prompts.length} ${prompts.length === 1 ? 'prompt' : 'prompts'}`;
 
     if (countBadge) countBadge.textContent = label;
     if (pillBadge) pillBadge.textContent = prompts.length;
+    if (queueSummary) queueSummary.textContent = `Queue (${prompts.length})`;
   }
 
   function updateStatus(text, isSpinning = false) {
     const msg = document.getElementById('gbi-status-msg');
     if (msg) {
       if (isSpinning) {
-        msg.innerHTML = `<span class="gbi-status-spinner"></span><span>${escapeHtml(text)}</span>`;
+        msg.innerHTML = `<span class="gbi-spinner"></span><span>${escapeHtml(text)}</span>`;
       } else {
         msg.innerHTML = `<span>${escapeHtml(text)}</span>`;
       }
@@ -823,17 +816,12 @@
   function updateProgress() {
     const total = state.prompts.length;
     const completed = state.queueStatus.filter((s) => s === 'done').length;
-    const current = Math.min(total, state.currentIndex + 1);
 
-    const progressLabel = document.getElementById('gbi-progress-label');
     const progressPercent = document.getElementById('gbi-progress-percent');
     const progressBar = document.getElementById('gbi-progress-bar');
 
     const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-    if (progressLabel) {
-      progressLabel.textContent = `Progress: ${completed} / ${total} completed`;
-    }
     if (progressPercent) {
       progressPercent.textContent = `${pct}%`;
     }
@@ -854,7 +842,7 @@
 
       if (state.isPaused) {
         if (startBtn) {
-          startBtn.innerHTML = '<span>▶️ Resume</span>';
+          startBtn.textContent = 'Resume';
           startBtn.className = 'gbi-btn gbi-btn-primary';
         }
         if (statusChip) {
@@ -863,7 +851,7 @@
         }
       } else {
         if (startBtn) {
-          startBtn.innerHTML = '<span>⏸️ Pause</span>';
+          startBtn.textContent = 'Pause';
           startBtn.className = 'gbi-btn gbi-btn-pause';
         }
         if (statusChip) {
@@ -875,13 +863,13 @@
       if (pill) pill.classList.remove('gbi-active-pill');
       if (stopBtn) stopBtn.disabled = true;
       if (startBtn) {
-        startBtn.innerHTML = '<span>🚀 Start Generation</span>';
+        startBtn.textContent = 'Start';
         startBtn.className = 'gbi-btn gbi-btn-primary';
       }
       if (statusChip) {
         const allDone = state.prompts.length > 0 && state.queueStatus.every((s) => s === 'done');
         if (allDone) {
-          statusChip.textContent = 'Completed';
+          statusChip.textContent = 'Done';
           statusChip.className = 'gbi-status-chip status-completed';
         } else {
           statusChip.textContent = 'Idle';
@@ -896,7 +884,7 @@
     if (!container) return;
 
     if (state.prompts.length === 0) {
-      container.innerHTML = `<div style="color:var(--gbi-text-muted); font-size:11.5px; padding:6px 0;">No prompts in queue.</div>`;
+      container.innerHTML = `<div style="color:var(--gbi-text-muted); font-size:11px; padding:4px 0;">No prompts in queue.</div>`;
       return;
     }
 
@@ -910,18 +898,18 @@
         icon = '🔄';
         itemClass = 'gbi-item-active';
       } else if (status === 'done') {
-        icon = '✅';
+        icon = '✓';
         itemClass = 'gbi-item-done';
       } else if (status === 'error') {
-        icon = '⚠️';
+        icon = '!';
         itemClass = 'gbi-item-error';
       }
 
       html += `
         <div class="gbi-queue-item ${itemClass}">
-          <span style="font-weight:600; color:var(--gbi-text-muted); font-size:10.5px; width:16px;">#${idx + 1}</span>
+          <span style="color:var(--gbi-text-muted); font-size:10px; width:14px;">#${idx + 1}</span>
           <span class="gbi-queue-text" title="${escapeHtml(prompt)}">${escapeHtml(prompt)}</span>
-          <span class="gbi-queue-badge">${icon}</span>
+          <span style="font-size:11px;">${icon}</span>
         </div>
       `;
     });
