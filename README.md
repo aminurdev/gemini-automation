@@ -9,7 +9,10 @@ Designed based on Gemini's Angular + Quill rich-text input architecture, with a 
 ## ✨ Features
 
 - 📌 **Corner Floating UI**: Injected directly on `gemini.google.com` with top-right or bottom-right toggle, minimize pill button, and draggable header.
-- 📝 **Multi-Prompt Queue**: Submit multiple prompts separated by newlines.
+- 📝 **Code-Style Multi-Prompt Editor**:
+  - **Dynamic Line Numbers**: Real-time line number gutter aligned 1:1 with each prompt.
+  - **No-Wrap Lines (`white-space: pre`)**: Each prompt stays on its own horizontal line with smooth horizontal scrolling.
+  - Synchronized vertical scrolling between line numbers and prompt text.
 - 🤖 **Smart Gemini Automation**:
   - Automatically targets Gemini's `rich-textarea .ql-editor[contenteditable="true"]` input container.
   - Triggers Quill Delta and Angular reactive form updates.

@@ -272,35 +272,97 @@
   gap: 4px;
 }
 
-.gbi-textarea-wrap {
+.gbi-editor-wrapper {
+  display: flex;
   position: relative;
-}
-
-.gbi-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  height: 82px;
-  padding: 8px 10px;
   background: var(--gbi-surface);
   border: 1px solid var(--gbi-border);
   border-radius: 8px;
-  color: var(--gbi-text);
-  font-family: inherit;
-  font-size: 12px;
-  line-height: 1.45;
+  overflow: hidden;
+  height: 200px;
+  min-height: 200px;
+  max-height: 500px;
   resize: vertical;
-  min-height: 60px;
-  max-height: 200px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gbi-editor-wrapper:focus-within {
+  border-color: var(--gbi-border-focus);
+}
+
+.gbi-line-numbers {
+  min-width: 28px;
+  width: auto;
+  padding: 8px 6px 16px 8px;
+  background: rgba(0, 0, 0, 0.14);
+  border-right: 1px solid var(--gbi-border);
+  color: var(--gbi-text-muted);
+  font-family: Consolas, Monaco, "Cascadia Code", "SF Mono", monospace;
+  font-size: 11px;
+  line-height: 20px;
+  text-align: right;
+  user-select: none;
+  pointer-events: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  opacity: 0.75;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+#gbi-main-panel.gbi-theme-light .gbi-line-numbers {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.gbi-ln {
+  height: 20px;
+  line-height: 20px;
+  box-sizing: border-box;
+}
+
+.gbi-textarea {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  color: var(--gbi-text);
+  font-family: Consolas, Monaco, "Cascadia Code", "SF Mono", monospace;
+  font-size: 11.5px;
+  line-height: 20px;
+  resize: none;
   outline: none;
-  transition: border-color 0.15s ease;
+  white-space: pre !important;
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  word-wrap: normal !important;
+  word-break: normal !important;
+  tab-size: 2;
 }
 
 .gbi-textarea:focus {
-  border-color: var(--gbi-border-focus);
+  outline: none;
 }
 
 .gbi-textarea::placeholder {
   color: var(--gbi-placeholder);
+  font-family: var(--gbi-font);
+}
+
+/* Custom scrollbars for the code editor */
+.gbi-textarea::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.gbi-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.gbi-textarea::-webkit-scrollbar-thumb {
+  background: var(--gbi-border-hover);
+  border-radius: 3px;
 }
 
 .gbi-input-meta {

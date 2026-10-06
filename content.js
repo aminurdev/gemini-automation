@@ -41,6 +41,7 @@
           if (textarea && !textarea.value) {
             textarea.value = res.gbi_prompts;
             updatePromptCount();
+            updateLineNumbers();
           }
         }
         if (res.gbi_config) {
@@ -725,6 +726,7 @@
     state.currentIndex = 0;
     savePromptsToStorage();
     updatePromptCount();
+    updateLineNumbers();
     updateProgress();
     renderQueueList();
     updateStatus('Ready');
@@ -834,10 +836,15 @@
 
         <!-- Prompts Textarea Container -->
         <div class="gbi-input-container">
-          <div class="gbi-textarea-wrap">
+          <div class="gbi-editor-wrapper">
+            <div class="gbi-line-numbers" id="gbi-line-numbers" aria-hidden="true">
+              <div class="gbi-ln">1</div>
+            </div>
             <textarea
               class="gbi-textarea"
               id="gbi-prompts-input"
+              wrap="off"
+              spellcheck="false"
               placeholder="Enter prompts (one per line)..."
             ></textarea>
           </div>
@@ -880,6 +887,7 @@
     document.body.appendChild(panel);
     bindUIEvents();
     loadSavedState();
+    updateLineNumbers();
   }
 
   function bindUIEvents() {
@@ -897,10 +905,11 @@
     const autoScrollCb = document.getElementById('gbi-autoscroll-cb');
     const queueToggle = document.getElementById('gbi-queue-toggle');
 
-    // Input changes
+    // Input changes & line number sync
     if (input) {
       input.addEventListener('input', () => {
         updatePromptCount();
+        updateLineNumbers();
         savePromptsToStorage();
         if (!state.isRunning) {
           state.prompts = getPromptsFromInput();
@@ -908,6 +917,14 @@
           state.currentIndex = 0;
           renderQueueList();
           updateProgress();
+        }
+      });
+
+      // Synchronize vertical scroll with line numbers gutter
+      input.addEventListener('scroll', () => {
+        const gutter = document.getElementById('gbi-line-numbers');
+        if (gutter) {
+          gutter.scrollTop = input.scrollTop;
         }
       });
     }
@@ -1186,6 +1203,22 @@
     if (countBadge) countBadge.textContent = label;
     if (pillBadge) pillBadge.textContent = prompts.length;
     if (queueSummary) queueSummary.textContent = `Queue (${prompts.length})`;
+  }
+
+  function updateLineNumbers() {
+    const textarea = document.getElementById('gbi-prompts-input');
+    const gutter = document.getElementById('gbi-line-numbers');
+    if (!textarea || !gutter) return;
+
+    const lines = textarea.value.split('\n');
+    const lineCount = Math.max(1, lines.length);
+
+    let html = '';
+    for (let i = 1; i <= lineCount; i++) {
+      html += `<div class="gbi-ln">${i}</div>`;
+    }
+    gutter.innerHTML = html;
+    gutter.scrollTop = textarea.scrollTop;
   }
 
   function updateStatus(text, isSpinning = false) {
