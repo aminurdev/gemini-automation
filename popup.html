@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Bulk Image Generator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="popup-header">
+      <div class="logo-box">
+        <img src="icons/icon48.png" alt="Logo" width="28" height="28">
+        <div>
+          <h1>Bulk Image Generator</h1>
+          <p class="subtitle">For Google Gemini</p>
+        </div>
+      </div>
+      <span class="badge">v1.0</span>
+    </div>
+
+    <div class="popup-body">
+      <div class="info-card">
+        <h3>🚀 Quick Start</h3>
+        <ol>
+          <li>Open <b>gemini.google.com</b> in your browser.</li>
+          <li>Look for the floating <b>✨ Bulk Prompt</b> widget in the top-right corner.</li>
+          <li>Paste your prompts (one per line) and click <b>Start Generation</b>.</li>
+          <li>Gemini will generate images one by one automatically!</li>
+        </ol>
+      </div>
+
+      <div class="actions">
+        <button id="btn-open-gemini" class="btn-primary">
+          <span>🌐 Open Google Gemini</span>
+        </button>
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="icon">⏱️</span>
+          <div>
+            <b>Smart Waiting</b>
+            <p>Automatically waits until image generation finishes before sending the next.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="icon">↕️</span>
+          <div>
+            <b>Flexible UI</b>
+            <p>Toggle between top-right and bottom-right or drag anywhere on screen.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <span class="icon">💾</span>
+          <div>
+            <b>Auto-Save</b>
+            <p>Your prompts and settings stay saved even if you reload the tab.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <span>Ready to automate your creative workflow ✨</span>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
