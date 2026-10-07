@@ -3,45 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulk Prompts for Gemini</title>
+  <title>Gemini Bulk Image Generator</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="popup-box">
-    <div class="popup-top">
+    <!-- Header -->
+    <header class="popup-top">
       <div class="title-group">
-        <span class="dot"></span>
-        <span class="app-name">Bulk Prompts</span>
+        <div class="logo-icon">✨</div>
+        <div class="title-text-wrap">
+          <span class="app-name">Bulk Prompts</span>
+          <span class="app-subtitle">Gemini Image Automator</span>
+        </div>
       </div>
-      <div style="display:flex; align-items:center; gap:5px;">
+      <div class="header-right">
         <button id="btn-theme-toggle" class="theme-icon-btn" title="Toggle Theme (Dark / Light)">🌙</button>
-        <span class="ver">v1.0</span>
+        <span class="ver-pill">v1.1</span>
       </div>
-    </div>
+    </header>
 
-    <div class="popup-content">
-      <p class="desc">Automate multi-prompt image generation and auto-download on Google Gemini.</p>
+    <!-- Main Content -->
+    <main class="popup-content">
+      <!-- Status Banner -->
+      <div class="status-banner">
+        <span class="pulse-indicator"></span>
+        <span class="status-label">Automation Active on Gemini</span>
+      </div>
 
+      <!-- Primary Action -->
       <button id="btn-open-gemini" class="open-btn">
-        <span>Open Gemini</span>
-        <span>↗</span>
+        <span class="btn-left">
+          <span class="btn-icon">🚀</span>
+          <span class="btn-text">Open Gemini Images</span>
+        </span>
+        <span class="btn-arrow">↗</span>
       </button>
 
-      <div class="hints">
-        <div class="hint-row">
-          <span class="hint-bullet">1</span>
-          <span>Open <b>gemini.google.com</b></span>
+      <!-- Workflow Pipeline Overview -->
+      <div class="workflow-card">
+        <div class="workflow-header">
+          <span class="workflow-title">⚡ Automated Pipeline</span>
+          <span class="workflow-badge">3 Steps</span>
         </div>
-        <div class="hint-row">
-          <span class="hint-bullet">2</span>
-          <span>Use the floating corner widget</span>
-        </div>
-        <div class="hint-row">
-          <span class="hint-bullet">3</span>
-          <span>Auto-generates & downloads images</span>
+        <div class="pipeline-steps">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <div class="step-desc">
+              <b>Images Menu</b>
+              <span>Auto-clicks side nav for fresh session</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <div class="step-desc">
+              <b>Prompt & Generate</b>
+              <span>Types prompt & triggers generation</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <div class="step-desc">
+              <b>Auto-Download</b>
+              <span>Saves high-res image & loops to next</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <!-- Quick Tips -->
+      <div class="quick-hints">
+        <div class="hint-item">
+          <span class="hint-icon">📌</span>
+          <span>Floating widget docks directly in Gemini's corner</span>
+        </div>
+        <div class="hint-item">
+          <span class="hint-icon">📝</span>
+          <span>Supports line numbers, cooldown delays & auto-retry</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <span>Gemini Bulk Generator</span>
+      <span class="footer-dot">•</span>
+      <span>Single-Flight Safe</span>
+    </footer>
   </div>
   <script src="popup.js"></script>
 </body>

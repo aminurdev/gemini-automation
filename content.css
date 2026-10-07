@@ -1,96 +1,106 @@
 /* ==========================================================================
-   Gemini Bulk Image Automator - Minimal & Clean Design System
+   Gemini Bulk Image Generator - Premium Glassmorphic Design System
    ========================================================================== */
 
 :root {
-  --gbi-bg: rgba(18, 20, 26, 0.94);
-  --gbi-surface: rgba(255, 255, 255, 0.04);
-  --gbi-surface-hover: rgba(255, 255, 255, 0.08);
-  --gbi-surface-active: rgba(255, 255, 255, 0.12);
-  --gbi-border: rgba(255, 255, 255, 0.08);
-  --gbi-border-hover: rgba(255, 255, 255, 0.16);
-  --gbi-border-focus: rgba(96, 165, 250, 0.5);
-  
+  /* Dark Theme Tokens (Default) */
+  --gbi-bg: rgba(14, 17, 23, 0.95);
+  --gbi-bg-elevated: rgba(22, 27, 34, 0.92);
+  --gbi-card-bg: rgba(25, 30, 40, 0.75);
+  --gbi-surface: rgba(255, 255, 255, 0.05);
+  --gbi-surface-hover: rgba(255, 255, 255, 0.09);
+  --gbi-surface-active: rgba(255, 255, 255, 0.14);
+
+  --gbi-border: rgba(255, 255, 255, 0.1);
+  --gbi-border-hover: rgba(255, 255, 255, 0.18);
+  --gbi-border-focus: rgba(99, 102, 241, 0.55);
+
+  --gbi-text: #f8fafc;
+  --gbi-text-sub: #94a3b8;
+  --gbi-text-muted: #64748b;
+  --gbi-placeholder: #52525b;
+
   --gbi-primary: #3b82f6;
-  --gbi-primary-hover: #2563eb;
-  --gbi-text: #f3f4f6;
-  --gbi-text-sub: #9ca3af;
-  --gbi-text-muted: #6b7280;
-  
+  --gbi-primary-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+  --gbi-primary-hover: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+
+  --gbi-pause-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gbi-danger: #ef4444;
+  --gbi-danger-bg: rgba(239, 68, 68, 0.12);
+  --gbi-danger-border: rgba(239, 68, 68, 0.3);
   --gbi-success: #10b981;
   --gbi-warning: #f59e0b;
-  --gbi-danger: #ef4444;
 
-  --gbi-drawer-bg: rgba(0, 0, 0, 0.28);
-  --gbi-placeholder: #52525b;
-  --gbi-track: rgba(255, 255, 255, 0.07);
-  --gbi-pill-hover-bg: rgba(26, 29, 38, 0.98);
-  
   --gbi-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Google Sans", Inter, sans-serif;
-  --gbi-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.07);
+  --gbi-mono: "Cascadia Code", "SF Mono", Monaco, Consolas, monospace;
+  --gbi-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --gbi-radius: 12px;
 }
 
-/* ==========================================
-   Light Theme Override
-   ========================================== */
+/* Light Theme Tokens */
 #gbi-main-panel.gbi-theme-light,
 #gbi-floating-pill.gbi-theme-light {
   --gbi-bg: rgba(255, 255, 255, 0.96);
+  --gbi-bg-elevated: rgba(248, 250, 252, 0.98);
+  --gbi-card-bg: rgba(241, 245, 249, 0.85);
   --gbi-surface: rgba(0, 0, 0, 0.04);
-  --gbi-surface-hover: rgba(0, 0, 0, 0.08);
-  --gbi-surface-active: rgba(0, 0, 0, 0.12);
-  --gbi-border: rgba(0, 0, 0, 0.12);
-  --gbi-border-hover: rgba(0, 0, 0, 0.22);
-  --gbi-border-focus: rgba(37, 99, 235, 0.5);
-  
+  --gbi-surface-hover: rgba(0, 0, 0, 0.07);
+  --gbi-surface-active: rgba(0, 0, 0, 0.1);
+
+  --gbi-border: rgba(0, 0, 0, 0.1);
+  --gbi-border-hover: rgba(0, 0, 0, 0.2);
+  --gbi-border-focus: rgba(37, 99, 235, 0.55);
+
+  --gbi-text: #0f172a;
+  --gbi-text-sub: #475569;
+  --gbi-text-muted: #64748b;
+  --gbi-placeholder: #94a3b8;
+
   --gbi-primary: #2563eb;
-  --gbi-primary-hover: #1d4ed8;
-  --gbi-text: #111827;
-  --gbi-text-sub: #4b5563;
-  --gbi-text-muted: #6b7280;
-  
+  --gbi-primary-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  --gbi-primary-hover: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
+
+  --gbi-pause-gradient: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  --gbi-danger: #dc2626;
+  --gbi-danger-bg: rgba(220, 38, 38, 0.08);
+  --gbi-danger-border: rgba(220, 38, 38, 0.25);
   --gbi-success: #059669;
   --gbi-warning: #d97706;
-  --gbi-danger: #dc2626;
 
-  --gbi-drawer-bg: rgba(0, 0, 0, 0.035);
-  --gbi-placeholder: #9ca3af;
-  --gbi-track: rgba(0, 0, 0, 0.08);
-  --gbi-pill-hover-bg: rgba(245, 247, 250, 0.98);
-  --gbi-shadow: 0 10px 28px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  --gbi-shadow: 0 16px 36px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
-/* ==========================================
-   1. Floating Launcher Pill (Minimized State)
-   ========================================== */
+/* ==========================================================================
+   1. Floating Pill (Minimized Mode)
+   ========================================================================== */
 #gbi-floating-pill {
   position: fixed;
   top: 14px;
-  right: 16px;
+  right: 18px;
   z-index: 999999;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
+  gap: 8px;
+  padding: 7px 14px;
   background: var(--gbi-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--gbi-border);
-  border-radius: 20px;
+  border-radius: 30px;
   box-shadow: var(--gbi-shadow);
   color: var(--gbi-text);
   font-family: var(--gbi-font);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   user-select: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #gbi-floating-pill:hover {
   border-color: var(--gbi-border-hover);
-  background: var(--gbi-pill-hover-bg);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
 }
 
 #gbi-floating-pill.gbi-pill-bottom {
@@ -99,48 +109,50 @@
 }
 
 #gbi-floating-pill .gbi-pill-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--gbi-primary);
   display: inline-block;
+  box-shadow: 0 0 8px var(--gbi-primary);
 }
 
 #gbi-floating-pill.gbi-active-pill .gbi-pill-dot {
   background: var(--gbi-success);
-  box-shadow: 0 0 8px var(--gbi-success);
+  box-shadow: 0 0 10px var(--gbi-success);
   animation: gbi-pulse 2s infinite;
 }
 
 #gbi-floating-pill .gbi-pill-badge {
   font-size: 11px;
-  color: var(--gbi-text-sub);
-  background: var(--gbi-surface);
-  padding: 1px 6px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--gbi-primary-gradient);
+  padding: 1px 7px;
   border-radius: 10px;
 }
 
 @keyframes gbi-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.2); }
+  50% { opacity: 0.5; transform: scale(1.3); }
 }
 
-/* ==========================================
-   2. Main Panel (Compact & Minimal)
-   ========================================== */
+/* ==========================================================================
+   2. Main Floating Panel
+   ========================================================================== */
 #gbi-main-panel {
   position: fixed;
   top: 14px;
-  right: 16px;
-  width: 320px;
+  right: 18px;
+  width: 336px;
   max-width: calc(100vw - 32px);
   max-height: calc(100vh - 28px);
   z-index: 999999;
   background: var(--gbi-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--gbi-border);
-  border-radius: 12px;
+  border-radius: var(--gbi-radius);
   box-shadow: var(--gbi-shadow);
   color: var(--gbi-text);
   font-family: var(--gbi-font);
@@ -148,8 +160,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-sizing: border-box;
-  transition: opacity 0.18s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  user-select: none;
 }
 
 #gbi-main-panel.gbi-panel-bottom {
@@ -166,67 +178,101 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 12px;
+  padding: 10px 14px;
+  background: var(--gbi-surface);
   border-bottom: 1px solid var(--gbi-border);
   cursor: grab;
-  user-select: none;
+}
+
+.gbi-header:active {
+  cursor: grabbing;
 }
 
 .gbi-header-left {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
+}
+
+.gbi-logo-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--gbi-primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
 }
 
 .gbi-title {
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
   color: var(--gbi-text);
-  letter-spacing: -0.1px;
 }
 
 .gbi-status-chip {
-  padding: 1px 6px;
-  border-radius: 10px;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   text-transform: capitalize;
-  background: var(--gbi-surface);
-  color: var(--gbi-text-sub);
+  transition: all 0.2s ease;
 }
 
 .gbi-status-chip.status-idle {
-  color: var(--gbi-text-muted);
+  background: var(--gbi-surface);
+  color: var(--gbi-text-sub);
+  border: 1px solid var(--gbi-border);
 }
 
 .gbi-status-chip.status-running {
-  background: rgba(59, 130, 246, 0.18);
-  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.16);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.gbi-status-chip.status-running::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #60a5fa;
+  box-shadow: 0 0 6px #60a5fa;
+  animation: gbi-pulse 1.5s infinite;
 }
 
 .gbi-status-chip.status-paused {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
 }
 
 .gbi-status-chip.status-completed {
-  background: rgba(16, 185, 129, 0.18);
-  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
 }
 
 .gbi-header-actions {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .gbi-icon-btn {
   background: transparent;
-  border: none;
-  color: var(--gbi-text-muted);
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
+  border: 1px solid transparent;
+  color: var(--gbi-text-sub);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,49 +285,351 @@
 .gbi-icon-btn:hover {
   background: var(--gbi-surface-hover);
   color: var(--gbi-text);
+  border-color: var(--gbi-border);
 }
 
 .gbi-icon-btn.gbi-active-btn {
   color: var(--gbi-primary);
   background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
-/* Body */
+/* ==========================================================================
+   3. Body Layout
+   ========================================================================== */
 .gbi-body {
-  padding: 10px 12px;
+  padding: 11px 13px;
   overflow-y: auto;
   max-height: calc(88vh - 55px);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 9px;
   box-sizing: border-box;
 }
 
 .gbi-body::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 .gbi-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 2px;
+  background: var(--gbi-surface-hover);
+  border-radius: 3px;
 }
 
-/* Textarea & Count Bar */
+/* ==========================================================================
+   4. Workflow Pipeline Banner (3-Step Visual Feedback)
+   ========================================================================== */
+.gbi-pipeline-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--gbi-surface);
+  border: 1px solid var(--gbi-border);
+  border-radius: 8px;
+  padding: 6px 8px;
+  gap: 4px;
+}
+
+.gbi-pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gbi-text-muted);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.gbi-pipeline-step.gbi-step-active {
+  background: var(--gbi-primary-gradient);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+  animation: gbi-step-glow 1.8s infinite ease-in-out;
+}
+
+@keyframes gbi-step-glow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.88; transform: scale(1.03); }
+}
+
+.gbi-pipeline-step.gbi-step-done {
+  color: var(--gbi-success);
+}
+
+.gbi-pipeline-arrow {
+  color: var(--gbi-border);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   5. Settings Drawer (Card-Based, Switch UI)
+   ========================================================================== */
+.gbi-settings-drawer {
+  background: var(--gbi-card-bg);
+  border: 1px solid var(--gbi-border);
+  border-radius: 10px;
+  padding: 10px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gbi-settings-drawer.gbi-collapsed {
+  display: none;
+}
+
+.gbi-drawer-section-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gbi-text-muted);
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.gbi-config-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  gap: 8px;
+}
+
+.gbi-config-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.gbi-config-label-group b {
+  font-size: 11.5px;
+  color: var(--gbi-text);
+  font-weight: 600;
+}
+
+.gbi-config-label-group span {
+  font-size: 10px;
+  color: var(--gbi-text-sub);
+}
+
+/* iOS Style Switch */
+.gbi-switch {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.gbi-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.gbi-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--gbi-surface-hover);
+  border: 1px solid var(--gbi-border);
+  transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 18px;
+}
+
+.gbi-slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #fff;
+  transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.gbi-switch input:checked + .gbi-slider {
+  background: var(--gbi-primary-gradient);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.gbi-switch input:checked + .gbi-slider:before {
+  transform: translateX(14px);
+}
+
+/* Number & Text inputs */
+.gbi-number-input,
+.gbi-text-input {
+  background: var(--gbi-surface);
+  border: 1px solid var(--gbi-border);
+  border-radius: 6px;
+  color: var(--gbi-text);
+  padding: 4px 7px;
+  font-size: 11.5px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.gbi-number-input {
+  width: 44px;
+  text-align: center;
+  font-family: var(--gbi-mono);
+}
+
+.gbi-text-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gbi-number-input:focus,
+.gbi-text-input:focus {
+  border-color: var(--gbi-border-focus);
+}
+
+/* Inline action button (Go to Images) */
+.gbi-inline-link-btn {
+  background: var(--gbi-surface);
+  border: 1px solid var(--gbi-border);
+  color: var(--gbi-primary);
+  font-size: 10.5px;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.gbi-inline-link-btn:hover {
+  background: var(--gbi-surface-hover);
+  border-color: var(--gbi-border-hover);
+  color: #60a5fa;
+  transform: translateY(-1px);
+}
+
+/* Secondary Full-Width Button */
+.gbi-btn-secondary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  background: var(--gbi-surface);
+  border: 1px solid var(--gbi-border);
+  border-radius: 7px;
+  color: var(--gbi-text);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gbi-btn-secondary:hover {
+  background: var(--gbi-surface-hover);
+  border-color: var(--gbi-border-hover);
+}
+
+/* Theme Toggle Pills */
+.gbi-theme-toggle-group {
+  display: flex;
+  background: var(--gbi-surface);
+  border: 1px solid var(--gbi-border);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.gbi-theme-pill-btn {
+  background: transparent;
+  border: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--gbi-text-sub);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gbi-theme-pill-btn.active {
+  background: var(--gbi-primary-gradient);
+  color: #fff;
+}
+
+/* ==========================================================================
+   6. Editor Container
+   ========================================================================== */
 .gbi-input-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+}
+
+.gbi-editor-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.gbi-count-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gbi-text-sub);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gbi-editor-tools {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gbi-tool-btn {
+  background: var(--gbi-surface);
+  border: 1px solid var(--gbi-border);
+  color: var(--gbi-text-sub);
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gbi-tool-btn:hover {
+  background: var(--gbi-surface-hover);
+  color: var(--gbi-text);
+  border-color: var(--gbi-border-hover);
 }
 
 .gbi-editor-wrapper {
   display: flex;
   position: relative;
-  background: var(--gbi-surface);
+  background: var(--gbi-card-bg);
   border: 1px solid var(--gbi-border);
-  border-radius: 8px;
+  border-radius: 9px;
   overflow: hidden;
-  height: 200px;
-  min-height: 200px;
-  max-height: 500px;
+  height: 185px;
+  min-height: 150px;
+  max-height: 480px;
   resize: vertical;
   box-sizing: border-box;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -289,16 +637,16 @@
 
 .gbi-editor-wrapper:focus-within {
   border-color: var(--gbi-border-focus);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
 }
 
 .gbi-line-numbers {
   min-width: 28px;
-  width: auto;
   padding: 8px 6px 16px 8px;
-  background: rgba(0, 0, 0, 0.14);
+  background: rgba(0, 0, 0, 0.18);
   border-right: 1px solid var(--gbi-border);
   color: var(--gbi-text-muted);
-  font-family: Consolas, Monaco, "Cascadia Code", "SF Mono", monospace;
+  font-family: var(--gbi-mono);
   font-size: 11px;
   line-height: 20px;
   text-align: right;
@@ -306,7 +654,7 @@
   pointer-events: none;
   overflow: hidden;
   box-sizing: border-box;
-  opacity: 0.75;
+  opacity: 0.8;
   height: 100%;
   flex-shrink: 0;
 }
@@ -330,7 +678,7 @@
   background: transparent;
   border: none;
   color: var(--gbi-text);
-  font-family: Consolas, Monaco, "Cascadia Code", "SF Mono", monospace;
+  font-family: var(--gbi-mono);
   font-size: 11.5px;
   line-height: 20px;
   resize: none;
@@ -341,10 +689,7 @@
   word-wrap: normal !important;
   word-break: normal !important;
   tab-size: 2;
-}
-
-.gbi-textarea:focus {
-  outline: none;
+  user-select: text;
 }
 
 .gbi-textarea::placeholder {
@@ -352,291 +697,178 @@
   font-family: var(--gbi-font);
 }
 
-/* Custom scrollbars for the code editor */
 .gbi-textarea::-webkit-scrollbar {
   width: 5px;
   height: 5px;
-}
-.gbi-textarea::-webkit-scrollbar-track {
-  background: transparent;
 }
 .gbi-textarea::-webkit-scrollbar-thumb {
   background: var(--gbi-border-hover);
   border-radius: 3px;
 }
 
-.gbi-input-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--gbi-text-muted);
-  padding: 0 2px;
-}
-
-.gbi-count-badge {
-  font-size: 11px;
-  color: var(--gbi-text-sub);
-}
-
-/* Collapsible Settings Drawer */
-.gbi-settings-drawer {
-  background: var(--gbi-drawer-bg);
-  border: 1px solid var(--gbi-border);
-  border-radius: 8px;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  transition: all 0.2s ease;
-}
-
-.gbi-settings-drawer.gbi-collapsed {
-  display: none;
-}
-
-.gbi-config-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11.5px;
-}
-
-.gbi-config-row label {
-  color: var(--gbi-text-sub);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
-.gbi-checkbox {
-  accent-color: var(--gbi-primary);
-  cursor: pointer;
-  width: 13px;
-  height: 13px;
-}
-
-.gbi-number-input, .gbi-text-input {
-  background: var(--gbi-surface);
-  border: 1px solid var(--gbi-border);
-  border-radius: 5px;
-  color: var(--gbi-text);
-  padding: 3px 6px;
-  font-size: 11.5px;
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.gbi-number-input {
-  width: 44px;
-  text-align: center;
-}
-
-.gbi-text-input {
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 2px;
-}
-
-.gbi-number-input:focus, .gbi-text-input:focus {
-  border-color: var(--gbi-border-focus);
-}
-
-/* Action Controls */
+/* ==========================================================================
+   7. Action Controls
+   ========================================================================== */
 .gbi-controls {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
 
 .gbi-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 7px 11px;
-  border-radius: 7px;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   border: none;
-  user-select: none;
-  transition: all 0.15s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gbi-btn:active {
+  transform: scale(0.98);
 }
 
 .gbi-btn-primary {
   flex: 1;
-  background: var(--gbi-primary);
+  background: var(--gbi-primary-gradient);
   color: #ffffff;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
 }
 
 .gbi-btn-primary:hover {
   background: var(--gbi-primary-hover);
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.45);
+  transform: translateY(-1px);
 }
 
 .gbi-btn-pause {
   flex: 1;
-  background: #d97706;
+  background: var(--gbi-pause-gradient);
   color: #ffffff;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
 }
 
 .gbi-btn-pause:hover {
-  background: #b45309;
+  transform: translateY(-1px);
 }
 
 .gbi-btn-stop {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  padding: 7px 10px;
+  background: var(--gbi-danger-bg);
+  border: 1px solid var(--gbi-danger-border);
+  color: var(--gbi-danger);
 }
 
-.gbi-btn-stop:hover {
-  background: rgba(239, 68, 68, 0.25);
+.gbi-btn-stop:hover:not(:disabled) {
+  background: var(--gbi-danger);
+  color: #fff;
+  border-color: var(--gbi-danger);
+}
+
+.gbi-btn-stop:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .gbi-btn-clear {
   background: var(--gbi-surface);
-  color: var(--gbi-text-sub);
   border: 1px solid var(--gbi-border);
-  padding: 7px 10px;
+  color: var(--gbi-text-sub);
 }
 
 .gbi-btn-clear:hover {
   background: var(--gbi-surface-hover);
   color: var(--gbi-text);
-}
-
-.gbi-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.gbi-btn-secondary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: var(--gbi-surface);
-  border: 1px solid var(--gbi-border);
-  color: var(--gbi-text);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  box-sizing: border-box;
-}
-
-.gbi-btn-secondary:hover {
-  background: var(--gbi-surface-hover);
   border-color: var(--gbi-border-hover);
-  color: var(--gbi-text);
 }
 
-/* Theme Toggle Button Group */
-.gbi-theme-toggle-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
+/* ==========================================================================
+   8. Status & Progress Bar
+   ========================================================================== */
+.gbi-status-card {
   background: var(--gbi-surface);
-  padding: 2px;
-  border-radius: 6px;
   border: 1px solid var(--gbi-border);
-}
-
-.gbi-theme-pill-btn {
-  background: transparent;
-  border: none;
-  color: var(--gbi-text-sub);
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-family: inherit;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.15s ease;
-}
-
-.gbi-theme-pill-btn:hover {
-  color: var(--gbi-text);
-}
-
-.gbi-theme-pill-btn.active {
-  background: var(--gbi-primary);
-  color: #ffffff;
-  font-weight: 500;
-}
-
-.gbi-btn-secondary:active {
-  background: var(--gbi-surface-active);
-  transform: translateY(1px);
-}
-
-/* Progress & Status (Ultra-Slim) */
-.gbi-status-bar {
+  border-radius: 8px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .gbi-progress-track {
   width: 100%;
-  height: 3px;
-  background: var(--gbi-track);
-  border-radius: 2px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
   overflow: hidden;
+}
+
+#gbi-main-panel.gbi-theme-light .gbi-progress-track {
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .gbi-progress-bar {
   height: 100%;
   width: 0%;
-  background: var(--gbi-primary);
-  border-radius: 2px;
-  transition: width 0.25s ease;
+  background: var(--gbi-primary-gradient);
+  border-radius: 4px;
+  transition: width 0.3s ease;
 }
 
 .gbi-status-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
-  color: var(--gbi-text-sub);
+  gap: 8px;
 }
 
 .gbi-status-text {
+  font-size: 11px;
+  color: var(--gbi-text);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 220px;
+  flex: 1;
 }
 
 .gbi-spinner {
-  width: 9px;
-  height: 9px;
-  border: 1.5px solid rgba(147, 197, 253, 0.3);
-  border-top-color: #60a5fa;
+  width: 11px;
+  height: 11px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--gbi-primary);
   border-radius: 50%;
   animation: gbi-spin 0.8s linear infinite;
   display: inline-block;
   flex-shrink: 0;
 }
 
+#gbi-main-panel.gbi-theme-light .gbi-spinner {
+  border-color: rgba(0, 0, 0, 0.15);
+  border-top-color: var(--gbi-primary);
+}
+
 @keyframes gbi-spin {
   to { transform: rotate(360deg); }
 }
 
-/* Queue Preview Accordion */
+.gbi-progress-percent {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gbi-text-sub);
+  font-family: var(--gbi-mono);
+}
+
+/* ==========================================================================
+   9. Queue Accordion
+   ========================================================================== */
 .gbi-queue-accordion {
   border-top: 1px solid var(--gbi-border);
   padding-top: 6px;
@@ -647,14 +879,15 @@
   align-items: center;
   justify-content: space-between;
   font-size: 11px;
-  color: var(--gbi-text-muted);
+  font-weight: 600;
+  color: var(--gbi-text-sub);
   cursor: pointer;
-  user-select: none;
-  padding: 2px 0;
+  padding: 2px 2px;
+  transition: color 0.15s ease;
 }
 
 .gbi-queue-header:hover {
-  color: var(--gbi-text-sub);
+  color: var(--gbi-text);
 }
 
 .gbi-queue-list {
@@ -663,32 +896,34 @@
   display: none;
   flex-direction: column;
   gap: 3px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .gbi-queue-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 6px;
-  border-radius: 4px;
+  padding: 4px 7px;
+  border-radius: 6px;
   background: var(--gbi-surface);
   font-size: 11px;
   gap: 6px;
 }
 
 .gbi-queue-item.gbi-item-active {
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(59, 130, 246, 0.15);
   color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .gbi-queue-item.gbi-item-done {
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 .gbi-queue-item.gbi-item-error {
-  background: rgba(239, 68, 68, 0.12);
+  background: var(--gbi-danger-bg);
   color: #fca5a5;
+  border: 1px solid var(--gbi-danger-border);
 }
 
 .gbi-queue-text {

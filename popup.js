@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (openGeminiBtn) {
     openGeminiBtn.addEventListener('click', () => {
-      chrome.tabs.create({ url: 'https://gemini.google.com/' });
+      chrome.tabs.create({ url: 'https://gemini.google.com/images' });
     });
   }
 

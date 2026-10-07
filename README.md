@@ -17,6 +17,11 @@ Designed based on Gemini's Angular + Quill rich-text input architecture, with a 
   - Automatically targets Gemini's `rich-textarea .ql-editor[contenteditable="true"]` input container.
   - Triggers Quill Delta and Angular reactive form updates.
   - Automatically clicks the `[aria-label="Send message"]` send button or dispatches Enter.
+- 🖼️ **Auto-Click "Images" Side Navigation Before Each Prompt**:
+  - Automatically clicks Gemini's dedicated **Images** side navigation entry (`data-test-id="images-side-nav-entry-button"`, `a[href="/images"]`) before processing each prompt.
+  - Ensures a clean, fresh image generation canvas/session per prompt to avoid multi-turn context drift or generation blocks.
+  - Automated full cycle: **Click "Images"** ➔ **Generate** ➔ **Auto-Download** ➔ **Click "Images" again** ➔ **Next prompt**!
+  - Fully toggleable in settings drawer with an instant **"Go ↗"** jump button.
 - ⏱️ **Auto-Detection of Generation Completion**:
   - Monitors Gemini's active generation states (`Stop response` button, thinking/loading spinners).
   - Automatically detects when image generation is complete.
@@ -66,13 +71,14 @@ Designed based on Gemini's Angular + Quill rich-text input architecture, with a 
    Surreal floating islands with waterfalls in a pastel twilight sky
    ```
 4. Configure options (click ⚙ button):
+   - **Click "Images" before each prompt**: Enabled by default. Clicks Gemini's side navigation **Images** option before each prompt, ensuring a fresh session each time.
    - **Auto prefix**: Prepend `Generate an image of: ` to every prompt automatically.
    - **Delay**: Cooldown delay (in seconds) after each generation completes.
    - **Auto-scroll**: Automatically scroll down to view new images as they generate.
    - **Auto-download images**: Automatically download full-size generated images once ready.
    - **Download All Images in Chat**: One-click download of all images currently visible on the page.
 5. Click **Start**.
-6. Sit back while the extension types each prompt, clicks Send, waits for Gemini to generate the image, automatically downloads the full-resolution file, and proceeds to the next prompt!
+6. Sit back while the extension clicks the "Images" option, types each prompt, clicks Send, waits for Gemini to generate the image, automatically downloads the full-resolution file, clicks "Images" again, and seamlessly continues with the next prompt!
 
 ---
 

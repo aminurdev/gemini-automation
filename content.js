@@ -19,7 +19,8 @@
     isPanelOpen: true,
     position: 'top-right', // 'top-right' or 'bottom-right'
     theme: 'dark',         // 'dark' or 'light'
-    cooldownDelay: 5,      // seconds to wait after generation completes
+    clickImagesOption: true, // click "Images" in side nav before each prompt
+    cooldownDelay: 8,      // seconds to wait after generation completes
     maxTimeout: 120,       // maximum seconds to wait per prompt
     autoScroll: true,
     autoDownload: true,    // auto-download generated images
@@ -35,7 +36,7 @@
   // ==========================================
   function loadSavedState() {
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get(['gbi_prompts', 'gbi_config', 'gbi_position'], (res) => {
+      chrome.storage.local.get(['gbi_prompts', 'gbi_config', 'gbi_position', 'gbi_theme'], (res) => {
         if (res.gbi_prompts && typeof res.gbi_prompts === 'string') {
           const textarea = document.getElementById('gbi-prompts-input');
           if (textarea && !textarea.value) {
@@ -45,6 +46,11 @@
           }
         }
         if (res.gbi_config) {
+          if (res.gbi_config.clickImagesOption !== undefined) {
+            state.clickImagesOption = res.gbi_config.clickImagesOption;
+            const cb = document.getElementById('gbi-click-images-cb');
+            if (cb) cb.checked = state.clickImagesOption;
+          }
           if (res.gbi_config.cooldownDelay !== undefined) {
             state.cooldownDelay = res.gbi_config.cooldownDelay;
             const input = document.getElementById('gbi-delay-input');
@@ -100,6 +106,7 @@
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
       chrome.storage.local.set({
         gbi_config: {
+          clickImagesOption: state.clickImagesOption,
           cooldownDelay: state.cooldownDelay,
           addPrefix: state.addPrefix,
           prefixText: state.prefixText,
@@ -115,13 +122,19 @@
   // DOM Selectors for Gemini
   // ==========================================
   function findEditorElement() {
-    // Exact selectors from Gemini inspect structure
+    // Exact selectors from Gemini inspect structure & Imagen workspace
     return (
       document.querySelector('rich-textarea .ql-editor[contenteditable="true"]') ||
       document.querySelector('div.ql-editor.textarea[contenteditable="true"]') ||
       document.querySelector('div.ql-editor[role="textbox"]') ||
       document.querySelector('div[aria-label="Enter a prompt for Gemini"]') ||
-      document.querySelector('rich-textarea div[contenteditable="true"]')
+      document.querySelector('div[aria-label*="prompt" i][contenteditable="true"]') ||
+      document.querySelector('div[aria-label*="Describe" i][contenteditable="true"]') ||
+      document.querySelector('rich-textarea div[contenteditable="true"]') ||
+      document.querySelector('textarea[aria-label*="prompt" i]') ||
+      document.querySelector('textarea.ql-editor') ||
+      document.querySelector('.input-area textarea') ||
+      document.querySelector('.input-area [contenteditable="true"]')
     );
   }
 
@@ -130,20 +143,155 @@
     const container = document.querySelector('[data-test-id="send-button-container"]');
     if (container) {
       const btn = container.querySelector('button');
-      if (btn && !btn.disabled && btn.getAttribute('aria-label')?.includes('Send')) {
+      if (btn && !btn.disabled) {
         return btn;
       }
     }
 
-    // 2. Button with aria-label
-    const ariaBtn = document.querySelector('button[aria-label="Send message"]');
-    if (ariaBtn && !ariaBtn.disabled) return ariaBtn;
+    // 2. Button with aria-label / data-test-id
+    const ariaSelectors = [
+      'button[aria-label="Send message"]',
+      'button[aria-label*="Send" i]',
+      'button[aria-label*="Generate" i]',
+      'button[aria-label*="Create" i]',
+      'button[data-test-id="send-button"]',
+      'button[data-test-id="generate-button"]'
+    ];
+    for (const sel of ariaSelectors) {
+      const btn = document.querySelector(sel);
+      if (btn && !btn.disabled) return btn;
+    }
 
     // 3. Button inside gem-icon-button submit
     const submitBtn = document.querySelector('.send-button button');
     if (submitBtn && !submitBtn.disabled) return submitBtn;
 
     return null;
+  }
+
+  // ==========================================
+  // Images Workspace Navigation
+  // ==========================================
+  function findImagesNavButton() {
+    // 1. Direct data-test-id on nav item (exact match from Gemini side nav inspection)
+    const testIdItem = document.querySelector('[data-test-id="images-side-nav-entry-button"]');
+    if (testIdItem) {
+      const anchor = testIdItem.querySelector('a') || testIdItem;
+      return anchor;
+    }
+
+    // 2. Anchor with href="/images"
+    const hrefAnchor = document.querySelector('a[href="/images"], a[href$="/images"], a[href*="/images"]');
+    if (hrefAnchor) return hrefAnchor;
+
+    // 3. Elements with aria-label="Images"
+    const ariaEl = document.querySelector('a[aria-label="Images"], button[aria-label="Images"], [aria-label="Images"]');
+    if (ariaEl) return ariaEl;
+
+    // 4. mat-icon with data-mat-icon-name="image_create" or fonticon="image_create"
+    const icon = document.querySelector('mat-icon[data-mat-icon-name="image_create"], mat-icon[fonticon="image_create"]');
+    if (icon) {
+      const parent = icon.closest('a') || icon.closest('[data-test-id="images-side-nav-entry-button"]') || icon.closest('button');
+      if (parent) return parent;
+    }
+
+    // 5. Look in side navigation lists for item with "Images" text
+    const sideNavLinks = document.querySelectorAll(
+      'mat-nav-list a, gem-sidenav-list a, .gds-sidenav-list a, gem-nav-list-item a, nav a'
+    );
+    for (const el of sideNavLinks) {
+      const text = (el.textContent || '').trim();
+      if (text === 'Images' || text.startsWith('Images\n') || el.getAttribute('aria-label') === 'Images') {
+        return el;
+      }
+    }
+
+    return null;
+  }
+
+  async function clickImagesOption(signal) {
+    if (signal?.aborted) return false;
+
+    updateStatus('Opening "Images" workspace...', true);
+
+    let btn = findImagesNavButton();
+
+    // If button is not immediately found, sidebar might be collapsed
+    if (!btn) {
+      const menuToggle = document.querySelector(
+        'button[aria-label="Main menu"], button[aria-label="Expand menu"], [data-test-id="side-nav-menu-button"], button[aria-label*="menu" i]'
+      );
+      if (menuToggle) {
+        console.log('[GBI] Side menu collapsed, clicking menu toggle...');
+        menuToggle.click();
+        await delay(500);
+        btn = findImagesNavButton();
+      }
+    }
+
+    if (!btn) {
+      console.warn('[GBI] Images nav entry not found in DOM.');
+      // Fallback: If not already on /images, navigate to /images
+      if (!window.location.pathname.includes('/images')) {
+        console.log('[GBI] Navigating to /images via location.href fallback...');
+        window.location.href = 'https://gemini.google.com/images';
+      }
+      return false;
+    }
+
+    console.log('[GBI] Found Images nav entry, triggering click...', btn);
+
+    // Scroll into view
+    try {
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (e) {}
+    await delay(120);
+
+    // Dispatch full pointer and mouse event sequence for Angular router
+    const clickTarget = btn.tagName && btn.tagName.toLowerCase() === 'a' ? btn : (btn.querySelector('a') || btn);
+    clickTarget.focus();
+    clickTarget.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+    clickTarget.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    clickTarget.click();
+    clickTarget.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    clickTarget.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
+    clickTarget.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+
+    // Also dispatch on parent if different
+    if (btn !== clickTarget) {
+      btn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    }
+
+    await delay(800);
+    return true;
+  }
+
+  async function waitForEditorReady(signal, maxWaitMs = 15000) {
+    const startTime = Date.now();
+    updateStatus('Waiting for "Images" workspace to be ready...', true);
+
+    // Initial wait for Angular router and DOM transition
+    await delay(1200);
+
+    while (Date.now() - startTime < maxWaitMs) {
+      if (signal?.aborted) return false;
+
+      if (!isGeminiGenerating()) {
+        const editor = findEditorElement();
+        if (editor) {
+          try {
+            editor.focus();
+            await delay(300);
+            return true;
+          } catch (e) {}
+        }
+      }
+
+      await delay(400);
+    }
+
+    console.warn('[GBI] Editor ready wait timed out, proceeding.');
+    return false;
   }
 
   function findStopButton() {
@@ -441,11 +589,20 @@
   async function injectPromptText(text) {
     const editor = findEditorElement();
     if (!editor) {
-      throw new Error('Could not find Gemini prompt editor. Make sure chat is open.');
+      throw new Error('Could not find Gemini prompt editor. Make sure chat or Images workspace is open.');
     }
 
     editor.focus();
     await delay(100);
+
+    // Support standard HTML textarea
+    if (editor.tagName && editor.tagName.toLowerCase() === 'textarea') {
+      editor.value = text;
+      editor.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+      editor.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+      await delay(350);
+      return true;
+    }
 
     // Select existing contents
     try {
@@ -457,6 +614,10 @@
     } catch (e) {
       console.warn('[GBI] Selection range error:', e);
     }
+
+    try {
+      document.execCommand('selectAll', false, null);
+    } catch (e) {}
 
     // Attempt standard insertText command for Quill
     let inserted = false;
@@ -590,6 +751,42 @@
   }
 
   // ==========================================
+  // Sample Prompts & Pipeline Helpers
+  // ==========================================
+const SAMPLE_PROMPTS = [
+  'Elegant Islamic geometric patterns in gold and emerald green, intricate arabesque details, luxurious studio lighting',
+  'Beautiful peaceful mosque courtyard at sunset, Islamic architecture, warm golden light, serene atmosphere, highly detailed',
+  'Open Quran on a wooden stand beside prayer beads and a lantern, soft natural light, peaceful Islamic atmosphere, photorealistic'
+];
+
+  function loadSamplePrompts() {
+    const textarea = document.getElementById('gbi-prompts-input');
+    if (!textarea) return;
+    textarea.value = SAMPLE_PROMPTS.join('\n');
+    updatePromptCount();
+    updateLineNumbers();
+    savePromptsToStorage();
+    if (!state.isRunning) {
+      state.prompts = getPromptsFromInput();
+      state.queueStatus = state.prompts.map(() => 'pending');
+      state.currentIndex = 0;
+      renderQueueList();
+      updateProgress();
+    }
+    updateStatus('Loaded 3 sample prompts. Ready to start!');
+  }
+
+  function updatePipelineStep(step) {
+    const stepImages = document.getElementById('gbi-step-images');
+    const stepGenerate = document.getElementById('gbi-step-generate');
+    const stepDownload = document.getElementById('gbi-step-download');
+
+    if (stepImages) stepImages.classList.toggle('gbi-step-active', step === 'images');
+    if (stepGenerate) stepGenerate.classList.toggle('gbi-step-active', step === 'generate');
+    if (stepDownload) stepDownload.classList.toggle('gbi-step-active', step === 'download');
+  }
+
+  // ==========================================
   // Queue Execution Controller
   // ==========================================
   async function startQueue() {
@@ -625,6 +822,7 @@
         // Handle pause
         while (state.isPaused) {
           if (!state.isRunning) break;
+          updatePipelineStep('idle');
           updateStatus(`Paused at prompt ${i + 1} of ${state.prompts.length}. Click Resume to continue.`);
           await delay(500);
         }
@@ -641,30 +839,47 @@
           promptText = `${state.prefixText.trim()} ${promptText}`;
         }
 
-        updateStatus(`[${i + 1}/${state.prompts.length}] Submitting prompt: "${promptText.slice(0, 45)}..."`, true);
-
         try {
-          // 1. Inject Prompt
+          // 1. Click "Images" option first (if enabled)
+          if (state.clickImagesOption) {
+            updatePipelineStep('images');
+            updateStatus(`[${i + 1}/${state.prompts.length}] Opening "Images" workspace...`, true);
+            await clickImagesOption(signal);
+            if (signal?.aborted || !state.isRunning) break;
+
+            await waitForEditorReady(signal);
+            if (signal?.aborted || !state.isRunning) break;
+          }
+
+          // Mark any existing images on screen so only the newly generated image is downloaded
+          markExistingImagesAsDownloaded();
+
+          // 2. Inject Prompt & Generate
+          updatePipelineStep('generate');
+          updateStatus(`[${i + 1}/${state.prompts.length}] Submitting prompt: "${promptText.slice(0, 45)}..."`, true);
           await injectPromptText(promptText);
           await delay(400);
 
-          // 2. Submit
+          // 3. Submit
           await submitPrompt();
           await delay(1500);
 
-          // 3. Wait for generation to complete
+          // 4. Wait for generation to complete
           await waitForGenerationToComplete(signal);
+          if (signal?.aborted || !state.isRunning) break;
 
-          // 4. Auto-download generated image(s) if enabled
+          // 5. Auto-download generated image(s) if enabled
           let downloadedCount = 0;
           if (state.autoDownload && !signal.aborted && state.isRunning) {
+            updatePipelineStep('download');
             downloadedCount = await autoDownloadNewImages(signal);
           }
 
+          updatePipelineStep('idle');
           state.queueStatus[i] = 'done';
           renderQueueList();
 
-          // 5. Cooldown delay before next prompt
+          // 6. Cooldown delay before next prompt (next prompt will click Images option again!)
           if (i < state.prompts.length - 1 && state.isRunning) {
             let remaining = state.cooldownDelay;
             while (remaining > 0 && state.isRunning && !state.isPaused) {
@@ -676,6 +891,7 @@
           }
         } catch (err) {
           console.error('[GBI] Error processing prompt:', err);
+          updatePipelineStep('idle');
           state.queueStatus[i] = 'error';
           renderQueueList();
           updateStatus(`Error on prompt ${i + 1}: ${err.message}. Continuing...`);
@@ -683,6 +899,7 @@
         }
       }
 
+      updatePipelineStep('idle');
       if (state.isRunning && state.currentIndex >= state.prompts.length - 1) {
         state.isRunning = false;
         state.isPaused = false;
@@ -694,6 +911,7 @@
       }
     } catch (e) {
       console.error('[GBI] Execution aborted or failed:', e);
+      updatePipelineStep('idle');
       state.isRunning = false;
       updateUIState();
     }
@@ -701,6 +919,7 @@
 
   function pauseQueue() {
     state.isPaused = !state.isPaused;
+    if (state.isPaused) updatePipelineStep('idle');
     updateUIState();
     updateStatus(state.isPaused ? '⏸️ Execution paused' : '▶️ Resuming execution...');
   }
@@ -708,6 +927,7 @@
   function stopQueue() {
     state.isRunning = false;
     state.isPaused = false;
+    updatePipelineStep('idle');
     if (executionAbortController) {
       executionAbortController.abort();
     }
@@ -729,6 +949,7 @@
     updateLineNumbers();
     updateProgress();
     renderQueueList();
+    updatePipelineStep('idle');
     updateStatus('Ready');
   }
 
@@ -776,12 +997,13 @@
       <!-- Header -->
       <div class="gbi-header" id="gbi-header-drag">
         <div class="gbi-header-left">
+          <div class="gbi-logo-badge">✨</div>
           <span class="gbi-title">Bulk Prompts</span>
           <span class="gbi-status-chip status-idle" id="gbi-status-chip">Idle</span>
         </div>
         <div class="gbi-header-actions">
           <button class="gbi-icon-btn" id="gbi-theme-btn" title="Toggle Theme (Dark / Light)">🌙</button>
-          <button class="gbi-icon-btn" id="gbi-settings-btn" title="Options">⚙</button>
+          <button class="gbi-icon-btn" id="gbi-settings-btn" title="Options & Workflow Mode">⚙</button>
           <button class="gbi-icon-btn" id="gbi-pos-btn" title="Toggle Position (Top / Bottom)">↕</button>
           <button class="gbi-icon-btn" id="gbi-min-btn" title="Minimize">✕</button>
         </div>
@@ -789,25 +1011,85 @@
 
       <!-- Body -->
       <div class="gbi-body">
+        <!-- 3-Step Workflow Pipeline Banner -->
+        <div class="gbi-pipeline-banner">
+          <div class="gbi-pipeline-step" id="gbi-step-images" title="Step 1: Open Images tab for fresh canvas">
+            <span>🖼️</span>
+            <span>1. Images</span>
+          </div>
+          <span class="gbi-pipeline-arrow">➔</span>
+          <div class="gbi-pipeline-step" id="gbi-step-generate" title="Step 2: Type prompt & submit">
+            <span>⚡</span>
+            <span>2. Generate</span>
+          </div>
+          <span class="gbi-pipeline-arrow">➔</span>
+          <div class="gbi-pipeline-step" id="gbi-step-download" title="Step 3: Auto-download full-sized image">
+            <span>📥</span>
+            <span>3. Download</span>
+          </div>
+        </div>
+
         <!-- Collapsible Settings Drawer -->
         <div class="gbi-settings-drawer gbi-collapsed" id="gbi-settings-drawer">
+          <div class="gbi-drawer-section-title">Workflow Mode</div>
           <div class="gbi-config-row">
-            <span style="color:var(--gbi-text-sub); font-size:11.5px;">Theme</span>
-            <div class="gbi-theme-toggle-group">
-              <button type="button" class="gbi-theme-pill-btn active" id="gbi-theme-dark-btn">🌙 Dark</button>
-              <button type="button" class="gbi-theme-pill-btn" id="gbi-theme-light-btn">☀️ Light</button>
+            <div class="gbi-config-label-group">
+              <b>Click "Images" each prompt</b>
+              <span>Resets via side nav before prompt</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button type="button" class="gbi-inline-link-btn" id="gbi-jump-images-btn" title="Click 'Images' side menu now">Go ↗</button>
+              <label class="gbi-switch">
+                <input type="checkbox" id="gbi-click-images-cb" checked>
+                <span class="gbi-slider"></span>
+              </label>
             </div>
           </div>
+
+          <div class="gbi-drawer-section-title">Automation & Timing</div>
           <div class="gbi-config-row">
-            <label>
-              <input type="checkbox" class="gbi-checkbox" id="gbi-prefix-cb" checked>
-              <span>Auto prefix</span>
+            <div class="gbi-config-label-group">
+              <b>Auto-download images</b>
+              <span>Sequential single-flight download</span>
+            </div>
+            <label class="gbi-switch">
+              <input type="checkbox" id="gbi-autodownload-cb" checked>
+              <span class="gbi-slider"></span>
             </label>
+          </div>
+
+          <div class="gbi-config-row">
+            <div class="gbi-config-label-group">
+              <b>Auto-scroll to images</b>
+              <span>Keeps newly generated images in view</span>
+            </div>
+            <label class="gbi-switch">
+              <input type="checkbox" id="gbi-autoscroll-cb" checked>
+              <span class="gbi-slider"></span>
+            </label>
+          </div>
+
+          <div class="gbi-config-row">
+            <div class="gbi-config-label-group">
+              <b>Cooldown delay</b>
+              <span>Seconds to wait between prompts</span>
+            </div>
             <div style="display:flex; align-items:center; gap:4px;">
-              <span style="color:var(--gbi-text-muted); font-size:11px;">Delay:</span>
               <input type="number" class="gbi-number-input" id="gbi-delay-input" min="2" max="60" value="8">
               <span style="color:var(--gbi-text-muted); font-size:11px;">s</span>
             </div>
+          </div>
+
+          <div class="gbi-drawer-section-title">Prompt Modification</div>
+          <div class="gbi-config-row">
+            <div class="gbi-config-label-group">
+              <b>Auto prepend prefix</b>
+              <span>Add prefix text to each prompt</span>
+            </div>
+            <label class="gbi-switch">
+              <input type="checkbox" id="gbi-prefix-cb" checked>
+              <span class="gbi-slider"></span>
+            </label>
           </div>
           <input
             type="text"
@@ -816,26 +1098,33 @@
             value="Generate an image of: "
             placeholder="Prefix text..."
           >
-          <div class="gbi-config-row">
-            <label>
-              <input type="checkbox" class="gbi-checkbox" id="gbi-autoscroll-cb" checked>
-              <span>Auto-scroll to images</span>
-            </label>
-          </div>
-          <div class="gbi-config-row">
-            <label>
-              <input type="checkbox" class="gbi-checkbox" id="gbi-autodownload-cb" checked>
-              <span>Auto-download images</span>
-            </label>
-          </div>
+
+          <div class="gbi-drawer-section-title">Batch Actions & Theme</div>
           <button type="button" class="gbi-btn-secondary" id="gbi-download-all-btn">
             <span>📥</span>
             <span>Download All Images in Chat</span>
           </button>
+
+          <div class="gbi-config-row" style="margin-top:2px;">
+            <div class="gbi-config-label-group">
+              <b>Theme Appearance</b>
+            </div>
+            <div class="gbi-theme-toggle-group">
+              <button type="button" class="gbi-theme-pill-btn active" id="gbi-theme-dark-btn">🌙 Dark</button>
+              <button type="button" class="gbi-theme-pill-btn" id="gbi-theme-light-btn">☀️ Light</button>
+            </div>
+          </div>
         </div>
 
         <!-- Prompts Textarea Container -->
         <div class="gbi-input-container">
+          <div class="gbi-editor-top-bar">
+            <span class="gbi-count-badge" id="gbi-count-badge">📝 0 prompts</span>
+            <div class="gbi-editor-tools">
+              <button type="button" class="gbi-tool-btn" id="gbi-sample-btn" title="Load sample prompts">✨ Sample</button>
+              <button type="button" class="gbi-tool-btn" id="gbi-clear-btn" title="Clear all prompts">🗑️ Clear</button>
+            </div>
+          </div>
           <div class="gbi-editor-wrapper">
             <div class="gbi-line-numbers" id="gbi-line-numbers" aria-hidden="true">
               <div class="gbi-ln">1</div>
@@ -845,38 +1134,34 @@
               id="gbi-prompts-input"
               wrap="off"
               spellcheck="false"
-              placeholder="Enter prompts (one per line)..."
+              placeholder="Enter prompts (one prompt per line)..."
             ></textarea>
-          </div>
-          <div class="gbi-input-meta">
-            <span class="gbi-count-badge" id="gbi-count-badge">0 prompts</span>
           </div>
         </div>
 
         <!-- Action Controls -->
         <div class="gbi-controls">
-          <button class="gbi-btn gbi-btn-primary" id="gbi-start-btn">Start</button>
-          <button class="gbi-btn gbi-btn-stop" id="gbi-stop-btn" disabled>Stop</button>
-          <button class="gbi-btn gbi-btn-clear" id="gbi-clear-btn">Clear</button>
+          <button class="gbi-btn gbi-btn-primary" id="gbi-start-btn">▶ Start Queue</button>
+          <button class="gbi-btn gbi-btn-stop" id="gbi-stop-btn" disabled>⏹ Stop</button>
         </div>
 
-        <!-- Status & Progress -->
-        <div class="gbi-status-bar">
+        <!-- Status & Progress Card -->
+        <div class="gbi-status-card">
           <div class="gbi-progress-track">
             <div class="gbi-progress-bar" id="gbi-progress-bar"></div>
           </div>
           <div class="gbi-status-row">
             <div class="gbi-status-text" id="gbi-status-msg">
-              <span>Ready</span>
+              <span>Ready to start</span>
             </div>
-            <span id="gbi-progress-percent" style="font-size:10.5px; color:var(--gbi-text-muted);">0%</span>
+            <span id="gbi-progress-percent" class="gbi-progress-percent">0%</span>
           </div>
         </div>
 
         <!-- Queue Accordion -->
         <div class="gbi-queue-accordion">
           <div class="gbi-queue-header" id="gbi-queue-toggle">
-            <span id="gbi-queue-summary">Queue</span>
+            <span id="gbi-queue-summary">Queue Overview (0)</span>
             <span id="gbi-queue-arrow" style="font-size:9px;">▶</span>
           </div>
           <div class="gbi-queue-list" id="gbi-queue-list"></div>
@@ -895,6 +1180,7 @@
     const startBtn = document.getElementById('gbi-start-btn');
     const stopBtn = document.getElementById('gbi-stop-btn');
     const clearBtn = document.getElementById('gbi-clear-btn');
+    const sampleBtn = document.getElementById('gbi-sample-btn');
     const minBtn = document.getElementById('gbi-min-btn');
     const posBtn = document.getElementById('gbi-pos-btn');
     const settingsBtn = document.getElementById('gbi-settings-btn');
@@ -903,41 +1189,37 @@
     const prefixInput = document.getElementById('gbi-prefix-input');
     const delayInput = document.getElementById('gbi-delay-input');
     const autoScrollCb = document.getElementById('gbi-autoscroll-cb');
+    const autoDownloadCb = document.getElementById('gbi-autodownload-cb');
+    const clickImagesCb = document.getElementById('gbi-click-images-cb');
+    const jumpImagesBtn = document.getElementById('gbi-jump-images-btn');
+    const downloadAllBtn = document.getElementById('gbi-download-all-btn');
+    const themeBtn = document.getElementById('gbi-theme-btn');
+    const themeDarkBtn = document.getElementById('gbi-theme-dark-btn');
+    const themeLightBtn = document.getElementById('gbi-theme-light-btn');
     const queueToggle = document.getElementById('gbi-queue-toggle');
 
-    // Input changes & line number sync
-    if (input) {
-      input.addEventListener('input', () => {
-        updatePromptCount();
-        updateLineNumbers();
-        savePromptsToStorage();
-        if (!state.isRunning) {
-          state.prompts = getPromptsFromInput();
-          state.queueStatus = state.prompts.map(() => 'pending');
-          state.currentIndex = 0;
-          renderQueueList();
-          updateProgress();
-        }
-      });
+    if (sampleBtn) {
+      sampleBtn.addEventListener('click', loadSamplePrompts);
+    }
 
-      // Synchronize vertical scroll with line numbers gutter
-      input.addEventListener('scroll', () => {
-        const gutter = document.getElementById('gbi-line-numbers');
-        if (gutter) {
-          gutter.scrollTop = input.scrollTop;
-        }
+    if (clickImagesCb) {
+      clickImagesCb.addEventListener('change', (e) => {
+        state.clickImagesOption = e.target.checked;
+        saveConfigToStorage();
       });
     }
 
-    // Settings Toggle
-    if (settingsBtn && settingsDrawer) {
-      settingsBtn.addEventListener('click', () => {
-        const isCollapsed = settingsDrawer.classList.toggle('gbi-collapsed');
-        settingsBtn.classList.toggle('gbi-active-btn', !isCollapsed);
+    if (jumpImagesBtn) {
+      jumpImagesBtn.addEventListener('click', async () => {
+        updatePipelineStep('images');
+        updateStatus('Opening "Images" workspace...', true);
+        await clickImagesOption(null);
+        await waitForEditorReady(null);
+        updatePipelineStep('idle');
+        updateStatus('Images workspace ready.');
       });
     }
 
-    // Config inputs
     if (prefixCb) {
       prefixCb.addEventListener('change', (e) => {
         state.addPrefix = e.target.checked;
@@ -969,11 +1251,16 @@
       });
     }
 
-    const autoDownloadCb = document.getElementById('gbi-autodownload-cb');
-    const downloadAllBtn = document.getElementById('gbi-download-all-btn');
-    const themeBtn = document.getElementById('gbi-theme-btn');
-    const themeDarkBtn = document.getElementById('gbi-theme-dark-btn');
-    const themeLightBtn = document.getElementById('gbi-theme-light-btn');
+    if (autoDownloadCb) {
+      autoDownloadCb.addEventListener('change', (e) => {
+        state.autoDownload = e.target.checked;
+        saveConfigToStorage();
+      });
+    }
+
+    if (downloadAllBtn) {
+      downloadAllBtn.addEventListener('click', downloadAllVisibleImages);
+    }
 
     if (themeBtn) {
       themeBtn.addEventListener('click', toggleTheme);
@@ -997,18 +1284,6 @@
       });
     }
 
-    if (autoDownloadCb) {
-      autoDownloadCb.addEventListener('change', (e) => {
-        state.autoDownload = e.target.checked;
-        saveConfigToStorage();
-      });
-    }
-
-    if (downloadAllBtn) {
-      downloadAllBtn.addEventListener('click', downloadAllVisibleImages);
-    }
-
-    // Buttons
     if (startBtn) {
       startBtn.addEventListener('click', () => {
         if (!state.isRunning) {
@@ -1036,6 +1311,35 @@
         const nextPos = state.position === 'top-right' ? 'bottom-right' : 'top-right';
         setPosition(nextPos);
         saveConfigToStorage();
+      });
+    }
+
+    if (settingsBtn && settingsDrawer) {
+      settingsBtn.addEventListener('click', () => {
+        const isCollapsed = settingsDrawer.classList.toggle('gbi-collapsed');
+        settingsBtn.classList.toggle('gbi-active-btn', !isCollapsed);
+      });
+    }
+
+    if (input) {
+      input.addEventListener('input', () => {
+        updatePromptCount();
+        updateLineNumbers();
+        savePromptsToStorage();
+        if (!state.isRunning) {
+          state.prompts = getPromptsFromInput();
+          state.queueStatus = state.prompts.map(() => 'pending');
+          state.currentIndex = 0;
+          renderQueueList();
+          updateProgress();
+        }
+      });
+
+      input.addEventListener('scroll', () => {
+        const gutter = document.getElementById('gbi-line-numbers');
+        if (gutter) {
+          gutter.scrollTop = input.scrollTop;
+        }
       });
     }
 
@@ -1198,11 +1502,11 @@
     const countBadge = document.getElementById('gbi-count-badge');
     const pillBadge = document.getElementById('gbi-pill-count');
     const queueSummary = document.getElementById('gbi-queue-summary');
-    const label = `${prompts.length} ${prompts.length === 1 ? 'prompt' : 'prompts'}`;
+    const label = `📝 ${prompts.length} ${prompts.length === 1 ? 'prompt' : 'prompts'}`;
 
     if (countBadge) countBadge.textContent = label;
     if (pillBadge) pillBadge.textContent = prompts.length;
-    if (queueSummary) queueSummary.textContent = `Queue (${prompts.length})`;
+    if (queueSummary) queueSummary.textContent = `Queue Overview (${prompts.length})`;
   }
 
   function updateLineNumbers() {
@@ -1261,7 +1565,7 @@
 
       if (state.isPaused) {
         if (startBtn) {
-          startBtn.textContent = 'Resume';
+          startBtn.textContent = '▶ Resume Queue';
           startBtn.className = 'gbi-btn gbi-btn-primary';
         }
         if (statusChip) {
@@ -1270,7 +1574,7 @@
         }
       } else {
         if (startBtn) {
-          startBtn.textContent = 'Pause';
+          startBtn.textContent = '⏸ Pause Queue';
           startBtn.className = 'gbi-btn gbi-btn-pause';
         }
         if (statusChip) {
@@ -1282,7 +1586,7 @@
       if (pill) pill.classList.remove('gbi-active-pill');
       if (stopBtn) stopBtn.disabled = true;
       if (startBtn) {
-        startBtn.textContent = 'Start';
+        startBtn.textContent = '▶ Start Queue';
         startBtn.className = 'gbi-btn gbi-btn-primary';
       }
       if (statusChip) {
