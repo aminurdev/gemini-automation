@@ -997,48 +997,52 @@ const SAMPLE_PROMPTS = [
       <!-- Header -->
       <div class="gbi-header" id="gbi-header-drag">
         <div class="gbi-header-left">
-          <div class="gbi-logo-badge">✨</div>
+          <div class="gbi-logo-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+            </svg>
+          </div>
           <span class="gbi-title">Bulk Prompts</span>
           <span class="gbi-status-chip status-idle" id="gbi-status-chip">Idle</span>
         </div>
         <div class="gbi-header-actions">
-          <button class="gbi-icon-btn" id="gbi-theme-btn" title="Toggle Theme (Dark / Light)">🌙</button>
-          <button class="gbi-icon-btn" id="gbi-settings-btn" title="Options & Workflow Mode">⚙</button>
-          <button class="gbi-icon-btn" id="gbi-pos-btn" title="Toggle Position (Top / Bottom)">↕</button>
+          <button class="gbi-icon-btn" id="gbi-theme-btn" title="Toggle Theme">🌙</button>
+          <button class="gbi-icon-btn" id="gbi-settings-btn" title="Settings">⚙</button>
+          <button class="gbi-icon-btn" id="gbi-pos-btn" title="Dock Top/Bottom">↕</button>
           <button class="gbi-icon-btn" id="gbi-min-btn" title="Minimize">✕</button>
         </div>
       </div>
 
       <!-- Body -->
       <div class="gbi-body">
-        <!-- 3-Step Workflow Pipeline Banner -->
+        <!-- Minimal Stepper Banner -->
         <div class="gbi-pipeline-banner">
-          <div class="gbi-pipeline-step" id="gbi-step-images" title="Step 1: Open Images tab for fresh canvas">
-            <span>🖼️</span>
-            <span>1. Images</span>
+          <div class="gbi-pipeline-step" id="gbi-step-images" title="Step 1: Open Images workspace">
+            <span class="gbi-step-num">1</span>
+            <span>Images</span>
           </div>
-          <span class="gbi-pipeline-arrow">➔</span>
-          <div class="gbi-pipeline-step" id="gbi-step-generate" title="Step 2: Type prompt & submit">
-            <span>⚡</span>
-            <span>2. Generate</span>
+          <span class="gbi-pipeline-divider">›</span>
+          <div class="gbi-pipeline-step" id="gbi-step-generate" title="Step 2: Generate image">
+            <span class="gbi-step-num">2</span>
+            <span>Generate</span>
           </div>
-          <span class="gbi-pipeline-arrow">➔</span>
-          <div class="gbi-pipeline-step" id="gbi-step-download" title="Step 3: Auto-download full-sized image">
-            <span>📥</span>
-            <span>3. Download</span>
+          <span class="gbi-pipeline-divider">›</span>
+          <div class="gbi-pipeline-step" id="gbi-step-download" title="Step 3: Save image">
+            <span class="gbi-step-num">3</span>
+            <span>Download</span>
           </div>
         </div>
 
         <!-- Collapsible Settings Drawer -->
         <div class="gbi-settings-drawer gbi-collapsed" id="gbi-settings-drawer">
-          <div class="gbi-drawer-section-title">Workflow Mode</div>
+          <div class="gbi-drawer-section-title">Workflow</div>
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
-              <b>Click "Images" each prompt</b>
-              <span>Resets via side nav before prompt</span>
+              <b>Reset via Images</b>
+              <span>Clicks Images menu each prompt</span>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
-              <button type="button" class="gbi-inline-link-btn" id="gbi-jump-images-btn" title="Click 'Images' side menu now">Go ↗</button>
+              <button type="button" class="gbi-inline-link-btn" id="gbi-jump-images-btn" title="Click 'Images' now">Go ↗</button>
               <label class="gbi-switch">
                 <input type="checkbox" id="gbi-click-images-cb" checked>
                 <span class="gbi-slider"></span>
@@ -1049,8 +1053,8 @@ const SAMPLE_PROMPTS = [
           <div class="gbi-drawer-section-title">Automation & Timing</div>
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
-              <b>Auto-download images</b>
-              <span>Sequential single-flight download</span>
+              <b>Auto-download</b>
+              <span>Save high-res output</span>
             </div>
             <label class="gbi-switch">
               <input type="checkbox" id="gbi-autodownload-cb" checked>
@@ -1060,8 +1064,8 @@ const SAMPLE_PROMPTS = [
 
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
-              <b>Auto-scroll to images</b>
-              <span>Keeps newly generated images in view</span>
+              <b>Auto-scroll</b>
+              <span>Keep images in view</span>
             </div>
             <label class="gbi-switch">
               <input type="checkbox" id="gbi-autoscroll-cb" checked>
@@ -1072,19 +1076,19 @@ const SAMPLE_PROMPTS = [
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
               <b>Cooldown delay</b>
-              <span>Seconds to wait between prompts</span>
+              <span>Seconds between prompts</span>
             </div>
             <div style="display:flex; align-items:center; gap:4px;">
               <input type="number" class="gbi-number-input" id="gbi-delay-input" min="2" max="60" value="8">
-              <span style="color:var(--gbi-text-muted); font-size:11px;">s</span>
+              <span style="color:var(--gbi-text-muted); font-size:10px;">s</span>
             </div>
           </div>
 
           <div class="gbi-drawer-section-title">Prompt Modification</div>
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
-              <b>Auto prepend prefix</b>
-              <span>Add prefix text to each prompt</span>
+              <b>Prepend prefix</b>
+              <span>Add prefix to each prompt</span>
             </div>
             <label class="gbi-switch">
               <input type="checkbox" id="gbi-prefix-cb" checked>
@@ -1099,19 +1103,18 @@ const SAMPLE_PROMPTS = [
             placeholder="Prefix text..."
           >
 
-          <div class="gbi-drawer-section-title">Batch Actions & Theme</div>
+          <div class="gbi-drawer-section-title">Batch & Theme</div>
           <button type="button" class="gbi-btn-secondary" id="gbi-download-all-btn">
-            <span>📥</span>
-            <span>Download All Images in Chat</span>
+            Download Visible Images
           </button>
 
           <div class="gbi-config-row" style="margin-top:2px;">
             <div class="gbi-config-label-group">
-              <b>Theme Appearance</b>
+              <b>Appearance</b>
             </div>
             <div class="gbi-theme-toggle-group">
-              <button type="button" class="gbi-theme-pill-btn active" id="gbi-theme-dark-btn">🌙 Dark</button>
-              <button type="button" class="gbi-theme-pill-btn" id="gbi-theme-light-btn">☀️ Light</button>
+              <button type="button" class="gbi-theme-pill-btn active" id="gbi-theme-dark-btn">Dark</button>
+              <button type="button" class="gbi-theme-pill-btn" id="gbi-theme-light-btn">Light</button>
             </div>
           </div>
         </div>
@@ -1119,10 +1122,10 @@ const SAMPLE_PROMPTS = [
         <!-- Prompts Textarea Container -->
         <div class="gbi-input-container">
           <div class="gbi-editor-top-bar">
-            <span class="gbi-count-badge" id="gbi-count-badge">📝 0 prompts</span>
+            <span class="gbi-count-badge" id="gbi-count-badge">0 prompts</span>
             <div class="gbi-editor-tools">
-              <button type="button" class="gbi-tool-btn" id="gbi-sample-btn" title="Load sample prompts">✨ Sample</button>
-              <button type="button" class="gbi-tool-btn" id="gbi-clear-btn" title="Clear all prompts">🗑️ Clear</button>
+              <button type="button" class="gbi-tool-btn" id="gbi-sample-btn" title="Load sample prompts">Sample</button>
+              <button type="button" class="gbi-tool-btn" id="gbi-clear-btn" title="Clear all prompts">Clear</button>
             </div>
           </div>
           <div class="gbi-editor-wrapper">
@@ -1141,8 +1144,8 @@ const SAMPLE_PROMPTS = [
 
         <!-- Action Controls -->
         <div class="gbi-controls">
-          <button class="gbi-btn gbi-btn-primary" id="gbi-start-btn">▶ Start Queue</button>
-          <button class="gbi-btn gbi-btn-stop" id="gbi-stop-btn" disabled>⏹ Stop</button>
+          <button class="gbi-btn gbi-btn-primary" id="gbi-start-btn">Start Queue</button>
+          <button class="gbi-btn gbi-btn-stop" id="gbi-stop-btn" disabled>Stop</button>
         </div>
 
         <!-- Status & Progress Card -->
@@ -1152,7 +1155,7 @@ const SAMPLE_PROMPTS = [
           </div>
           <div class="gbi-status-row">
             <div class="gbi-status-text" id="gbi-status-msg">
-              <span>Ready to start</span>
+              <span>Ready</span>
             </div>
             <span id="gbi-progress-percent" class="gbi-progress-percent">0%</span>
           </div>
@@ -1161,8 +1164,8 @@ const SAMPLE_PROMPTS = [
         <!-- Queue Accordion -->
         <div class="gbi-queue-accordion">
           <div class="gbi-queue-header" id="gbi-queue-toggle">
-            <span id="gbi-queue-summary">Queue Overview (0)</span>
-            <span id="gbi-queue-arrow" style="font-size:9px;">▶</span>
+            <span id="gbi-queue-summary">Queue (0)</span>
+            <span id="gbi-queue-arrow" style="font-size:8px;">▶</span>
           </div>
           <div class="gbi-queue-list" id="gbi-queue-list"></div>
         </div>
@@ -1502,11 +1505,11 @@ const SAMPLE_PROMPTS = [
     const countBadge = document.getElementById('gbi-count-badge');
     const pillBadge = document.getElementById('gbi-pill-count');
     const queueSummary = document.getElementById('gbi-queue-summary');
-    const label = `📝 ${prompts.length} ${prompts.length === 1 ? 'prompt' : 'prompts'}`;
+    const label = `${prompts.length} ${prompts.length === 1 ? 'prompt' : 'prompts'}`;
 
     if (countBadge) countBadge.textContent = label;
     if (pillBadge) pillBadge.textContent = prompts.length;
-    if (queueSummary) queueSummary.textContent = `Queue Overview (${prompts.length})`;
+    if (queueSummary) queueSummary.textContent = `Queue (${prompts.length})`;
   }
 
   function updateLineNumbers() {
@@ -1527,13 +1530,26 @@ const SAMPLE_PROMPTS = [
 
   function updateStatus(text, isSpinning = false) {
     const msg = document.getElementById('gbi-status-msg');
-    if (msg) {
-      if (isSpinning) {
-        msg.innerHTML = `<span class="gbi-spinner"></span><span>${escapeHtml(text)}</span>`;
-      } else {
-        msg.innerHTML = `<span>${escapeHtml(text)}</span>`;
-      }
+    if (!msg) return;
+
+    // Keep the spinner element alive across calls so its CSS animation never resets.
+    let spinnerEl = msg.querySelector('.gbi-spinner');
+    let labelEl   = msg.querySelector('.gbi-status-label');
+
+    // First call — build the structure once.
+    if (!spinnerEl || !labelEl) {
+      msg.innerHTML = '';
+      spinnerEl = document.createElement('span');
+      spinnerEl.className = 'gbi-spinner';
+      labelEl = document.createElement('span');
+      labelEl.className = 'gbi-status-label';
+      msg.appendChild(spinnerEl);
+      msg.appendChild(labelEl);
     }
+
+    // Toggle spinner visibility without touching the element itself.
+    spinnerEl.style.display = isSpinning ? 'inline-block' : 'none';
+    labelEl.textContent = text;
   }
 
   function updateProgress() {
@@ -1565,7 +1581,7 @@ const SAMPLE_PROMPTS = [
 
       if (state.isPaused) {
         if (startBtn) {
-          startBtn.textContent = '▶ Resume Queue';
+          startBtn.textContent = 'Resume Queue';
           startBtn.className = 'gbi-btn gbi-btn-primary';
         }
         if (statusChip) {
@@ -1574,7 +1590,7 @@ const SAMPLE_PROMPTS = [
         }
       } else {
         if (startBtn) {
-          startBtn.textContent = '⏸ Pause Queue';
+          startBtn.textContent = 'Pause Queue';
           startBtn.className = 'gbi-btn gbi-btn-pause';
         }
         if (statusChip) {
@@ -1586,7 +1602,7 @@ const SAMPLE_PROMPTS = [
       if (pill) pill.classList.remove('gbi-active-pill');
       if (stopBtn) stopBtn.disabled = true;
       if (startBtn) {
-        startBtn.textContent = '▶ Start Queue';
+        startBtn.textContent = 'Start Queue';
         startBtn.className = 'gbi-btn gbi-btn-primary';
       }
       if (statusChip) {
@@ -1614,11 +1630,11 @@ const SAMPLE_PROMPTS = [
     let html = '';
     state.prompts.forEach((prompt, idx) => {
       const status = state.queueStatus[idx] || 'pending';
-      let icon = '⏳';
+      let icon = '•';
       let itemClass = '';
 
       if (status === 'running') {
-        icon = '🔄';
+        icon = '●';
         itemClass = 'gbi-item-active';
       } else if (status === 'done') {
         icon = '✓';
@@ -1630,9 +1646,9 @@ const SAMPLE_PROMPTS = [
 
       html += `
         <div class="gbi-queue-item ${itemClass}">
-          <span style="color:var(--gbi-text-muted); font-size:10px; width:14px;">#${idx + 1}</span>
+          <span style="color:var(--gbi-text-muted); font-size:10px; width:16px;">#${idx + 1}</span>
           <span class="gbi-queue-text" title="${escapeHtml(prompt)}">${escapeHtml(prompt)}</span>
-          <span style="font-size:11px;">${icon}</span>
+          <span style="font-size:10px; font-weight:600;">${icon}</span>
         </div>
       `;
     });

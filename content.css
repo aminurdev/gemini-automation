@@ -1,73 +1,67 @@
 /* ==========================================================================
-   Gemini Bulk Image Generator - Premium Glassmorphic Design System
+   Gemini Bulk Image Generator - Minimal, Clean & Modern Design System
    ========================================================================== */
 
 :root {
   /* Dark Theme Tokens (Default) */
-  --gbi-bg: rgba(14, 17, 23, 0.95);
-  --gbi-bg-elevated: rgba(22, 27, 34, 0.92);
-  --gbi-card-bg: rgba(25, 30, 40, 0.75);
-  --gbi-surface: rgba(255, 255, 255, 0.05);
-  --gbi-surface-hover: rgba(255, 255, 255, 0.09);
-  --gbi-surface-active: rgba(255, 255, 255, 0.14);
+  --gbi-bg: rgba(15, 18, 24, 0.96);
+  --gbi-surface: rgba(255, 255, 255, 0.04);
+  --gbi-surface-hover: rgba(255, 255, 255, 0.07);
+  --gbi-surface-active: rgba(255, 255, 255, 0.1);
+  --gbi-card-bg: rgba(22, 27, 36, 0.85);
 
-  --gbi-border: rgba(255, 255, 255, 0.1);
-  --gbi-border-hover: rgba(255, 255, 255, 0.18);
-  --gbi-border-focus: rgba(99, 102, 241, 0.55);
+  --gbi-border: rgba(255, 255, 255, 0.08);
+  --gbi-border-hover: rgba(255, 255, 255, 0.14);
+  --gbi-border-focus: rgba(59, 130, 246, 0.5);
 
-  --gbi-text: #f8fafc;
+  --gbi-text: #f1f5f9;
   --gbi-text-sub: #94a3b8;
   --gbi-text-muted: #64748b;
-  --gbi-placeholder: #52525b;
+  --gbi-placeholder: #475569;
 
   --gbi-primary: #3b82f6;
-  --gbi-primary-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-  --gbi-primary-hover: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-
-  --gbi-pause-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gbi-primary-hover: #2563eb;
+  --gbi-pause: #f59e0b;
+  --gbi-pause-hover: #d97706;
   --gbi-danger: #ef4444;
-  --gbi-danger-bg: rgba(239, 68, 68, 0.12);
-  --gbi-danger-border: rgba(239, 68, 68, 0.3);
+  --gbi-danger-bg: rgba(239, 68, 68, 0.1);
+  --gbi-danger-border: rgba(239, 68, 68, 0.25);
   --gbi-success: #10b981;
-  --gbi-warning: #f59e0b;
 
   --gbi-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Google Sans", Inter, sans-serif;
-  --gbi-mono: "Cascadia Code", "SF Mono", Monaco, Consolas, monospace;
-  --gbi-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
-  --gbi-radius: 12px;
+  --gbi-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --gbi-shadow: 0 12px 32px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --gbi-radius: 10px;
 }
 
 /* Light Theme Tokens */
 #gbi-main-panel.gbi-theme-light,
 #gbi-floating-pill.gbi-theme-light {
-  --gbi-bg: rgba(255, 255, 255, 0.96);
-  --gbi-bg-elevated: rgba(248, 250, 252, 0.98);
-  --gbi-card-bg: rgba(241, 245, 249, 0.85);
-  --gbi-surface: rgba(0, 0, 0, 0.04);
-  --gbi-surface-hover: rgba(0, 0, 0, 0.07);
-  --gbi-surface-active: rgba(0, 0, 0, 0.1);
+  --gbi-bg: rgba(255, 255, 255, 0.98);
+  --gbi-surface: #f8fafc;
+  --gbi-surface-hover: #f1f5f9;
+  --gbi-surface-active: #e2e8f0;
+  --gbi-card-bg: #f8fafc;
 
-  --gbi-border: rgba(0, 0, 0, 0.1);
-  --gbi-border-hover: rgba(0, 0, 0, 0.2);
-  --gbi-border-focus: rgba(37, 99, 235, 0.55);
+  --gbi-border: rgba(0, 0, 0, 0.09);
+  --gbi-border-hover: rgba(0, 0, 0, 0.16);
+  --gbi-border-focus: rgba(37, 99, 235, 0.5);
 
   --gbi-text: #0f172a;
   --gbi-text-sub: #475569;
-  --gbi-text-muted: #64748b;
+  --gbi-text-muted: #94a3b8;
   --gbi-placeholder: #94a3b8;
 
   --gbi-primary: #2563eb;
-  --gbi-primary-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-  --gbi-primary-hover: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
-
-  --gbi-pause-gradient: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  --gbi-primary-hover: #1d4ed8;
+  --gbi-pause: #d97706;
+  --gbi-pause-hover: #b45309;
   --gbi-danger: #dc2626;
-  --gbi-danger-bg: rgba(220, 38, 38, 0.08);
-  --gbi-danger-border: rgba(220, 38, 38, 0.25);
+  --gbi-danger-bg: rgba(220, 38, 38, 0.06);
+  --gbi-danger-border: rgba(220, 38, 38, 0.2);
   --gbi-success: #059669;
-  --gbi-warning: #d97706;
 
-  --gbi-shadow: 0 16px 36px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  --gbi-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 /* ==========================================================================
@@ -80,61 +74,60 @@
   z-index: 999999;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
+  gap: 7px;
+  padding: 6px 12px;
   background: var(--gbi-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--gbi-border);
-  border-radius: 30px;
+  border-radius: 20px;
   box-shadow: var(--gbi-shadow);
   color: var(--gbi-text);
   font-family: var(--gbi-font);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 500;
   cursor: pointer;
   user-select: none;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-font-smoothing: antialiased;
+  transition: all 0.15s ease;
 }
 
 #gbi-floating-pill:hover {
   border-color: var(--gbi-border-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  transform: translateY(-1px);
 }
 
 #gbi-floating-pill.gbi-pill-bottom {
   top: auto;
-  bottom: 20px;
+  bottom: 18px;
 }
 
 #gbi-floating-pill .gbi-pill-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--gbi-primary);
   display: inline-block;
-  box-shadow: 0 0 8px var(--gbi-primary);
 }
 
 #gbi-floating-pill.gbi-active-pill .gbi-pill-dot {
   background: var(--gbi-success);
-  box-shadow: 0 0 10px var(--gbi-success);
-  animation: gbi-pulse 2s infinite;
+  animation: gbi-pulse 2s infinite ease-in-out;
 }
 
 #gbi-floating-pill .gbi-pill-badge {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   color: #fff;
-  background: var(--gbi-primary-gradient);
-  padding: 1px 7px;
+  background: var(--gbi-primary);
+  padding: 1px 6px;
   border-radius: 10px;
+  font-family: var(--gbi-mono);
 }
 
 @keyframes gbi-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.3); }
+  50% { opacity: 0.5; transform: scale(1.2); }
 }
 
 /* ==========================================================================
@@ -144,13 +137,13 @@
   position: fixed;
   top: 14px;
   right: 18px;
-  width: 336px;
-  max-width: calc(100vw - 32px);
+  width: 320px;
+  max-width: calc(100vw - 28px);
   max-height: calc(100vh - 28px);
   z-index: 999999;
   background: var(--gbi-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--gbi-border);
   border-radius: var(--gbi-radius);
   box-shadow: var(--gbi-shadow);
@@ -160,25 +153,28 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: opacity 0.2s ease, transform 0.2s ease;
   user-select: none;
+  -webkit-font-smoothing: antialiased;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 #gbi-main-panel.gbi-panel-bottom {
   top: auto;
-  bottom: 20px;
+  bottom: 18px;
 }
 
 #gbi-main-panel.gbi-hidden {
   display: none !important;
 }
 
-/* Header */
+/* ==========================================================================
+   3. Header
+   ========================================================================== */
 .gbi-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+  padding: 9px 12px;
   background: var(--gbi-surface);
   border-bottom: 1px solid var(--gbi-border);
   cursor: grab;
@@ -191,39 +187,36 @@
 .gbi-header-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .gbi-logo-badge {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: var(--gbi-primary-gradient);
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--gbi-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
   color: #fff;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  flex-shrink: 0;
 }
 
 .gbi-title {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: -0.2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
   color: var(--gbi-text);
 }
 
 .gbi-status-chip {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 12px;
+  font-size: 9.5px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  text-transform: capitalize;
-  transition: all 0.2s ease;
 }
 
 .gbi-status-chip.status-idle {
@@ -233,52 +226,51 @@
 }
 
 .gbi-status-chip.status-running {
-  background: rgba(59, 130, 246, 0.16);
+  background: rgba(59, 130, 246, 0.12);
   color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.35);
+  border: 1px solid rgba(59, 130, 246, 0.25);
 }
 
 .gbi-status-chip.status-running::before {
   content: "";
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: #60a5fa;
-  box-shadow: 0 0 6px #60a5fa;
   animation: gbi-pulse 1.5s infinite;
 }
 
 .gbi-status-chip.status-paused {
-  background: rgba(245, 158, 11, 0.16);
+  background: rgba(245, 158, 11, 0.12);
   color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .gbi-status-chip.status-completed {
-  background: rgba(16, 185, 129, 0.16);
+  background: rgba(16, 185, 129, 0.12);
   color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .gbi-header-actions {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 .gbi-icon-btn {
   background: transparent;
   border: 1px solid transparent;
   color: var(--gbi-text-sub);
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 12px;
-  transition: all 0.15s ease;
+  font-size: 11px;
+  transition: all 0.12s ease;
   padding: 0;
 }
 
@@ -290,33 +282,33 @@
 
 .gbi-icon-btn.gbi-active-btn {
   color: var(--gbi-primary);
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: var(--gbi-surface-active);
+  border-color: var(--gbi-border);
 }
 
 /* ==========================================================================
-   3. Body Layout
+   4. Body Layout
    ========================================================================== */
 .gbi-body {
-  padding: 11px 13px;
+  padding: 10px 12px;
   overflow-y: auto;
-  max-height: calc(88vh - 55px);
+  max-height: calc(88vh - 48px);
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
   box-sizing: border-box;
 }
 
 .gbi-body::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 .gbi-body::-webkit-scrollbar-thumb {
-  background: var(--gbi-surface-hover);
-  border-radius: 3px;
+  background: var(--gbi-border);
+  border-radius: 2px;
 }
 
 /* ==========================================================================
-   4. Workflow Pipeline Banner (3-Step Visual Feedback)
+   5. Stepper Banner
    ========================================================================== */
 .gbi-pipeline-banner {
   display: flex;
@@ -324,58 +316,57 @@
   justify-content: space-between;
   background: var(--gbi-surface);
   border: 1px solid var(--gbi-border);
-  border-radius: 8px;
-  padding: 6px 8px;
-  gap: 4px;
+  border-radius: 6px;
+  padding: 4px 6px;
+  gap: 2px;
 }
 
 .gbi-pipeline-step {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 6px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 600;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 500;
   color: var(--gbi-text-muted);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   white-space: nowrap;
 }
 
+.gbi-step-num {
+  font-size: 8px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
 .gbi-pipeline-step.gbi-step-active {
-  background: var(--gbi-primary-gradient);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
-  animation: gbi-step-glow 1.8s infinite ease-in-out;
+  background: var(--gbi-primary);
+  color: #ffffff;
 }
 
-@keyframes gbi-step-glow {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.88; transform: scale(1.03); }
+.gbi-pipeline-step.gbi-step-active .gbi-step-num {
+  opacity: 1;
 }
 
-.gbi-pipeline-step.gbi-step-done {
-  color: var(--gbi-success);
-}
-
-.gbi-pipeline-arrow {
-  color: var(--gbi-border);
-  font-size: 9px;
-  font-weight: 700;
+.gbi-pipeline-divider {
+  color: var(--gbi-text-muted);
+  font-size: 10px;
+  opacity: 0.5;
 }
 
 /* ==========================================================================
-   5. Settings Drawer (Card-Based, Switch UI)
+   6. Collapsible Settings Drawer
    ========================================================================== */
 .gbi-settings-drawer {
-  background: var(--gbi-card-bg);
+  background: var(--gbi-surface);
   border: 1px solid var(--gbi-border);
-  border-radius: 10px;
-  padding: 10px 11px;
+  border-radius: 7px;
+  padding: 9px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 7px;
+  transition: all 0.15s ease;
 }
 
 .gbi-settings-drawer.gbi-collapsed {
@@ -383,46 +374,44 @@
 }
 
 .gbi-drawer-section-title {
-  font-size: 10.5px;
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   color: var(--gbi-text-muted);
-  margin-top: 2px;
-  margin-bottom: 2px;
+  margin-top: 1px;
 }
 
 .gbi-config-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11.5px;
-  gap: 8px;
+  font-size: 11px;
+  gap: 6px;
 }
 
 .gbi-config-label-group {
   display: flex;
   flex-direction: column;
-  gap: 1px;
 }
 
 .gbi-config-label-group b {
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--gbi-text);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .gbi-config-label-group span {
-  font-size: 10px;
-  color: var(--gbi-text-sub);
+  font-size: 9.5px;
+  color: var(--gbi-text-muted);
 }
 
-/* iOS Style Switch */
+/* Sleek Minimal Switch */
 .gbi-switch {
   position: relative;
   display: inline-block;
-  width: 32px;
-  height: 18px;
+  width: 28px;
+  height: 16px;
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -442,47 +431,46 @@
   bottom: 0;
   background-color: var(--gbi-surface-hover);
   border: 1px solid var(--gbi-border);
-  transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 18px;
+  transition: 0.15s ease;
+  border-radius: 16px;
 }
 
 .gbi-slider:before {
   position: absolute;
   content: "";
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   left: 2px;
   bottom: 2px;
   background-color: #fff;
-  transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: 0.15s ease;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .gbi-switch input:checked + .gbi-slider {
-  background: var(--gbi-primary-gradient);
-  border-color: rgba(99, 102, 241, 0.4);
+  background-color: var(--gbi-primary);
+  border-color: var(--gbi-primary);
 }
 
 .gbi-switch input:checked + .gbi-slider:before {
-  transform: translateX(14px);
+  transform: translateX(12px);
 }
 
-/* Number & Text inputs */
+/* Inputs */
 .gbi-number-input,
 .gbi-text-input {
-  background: var(--gbi-surface);
+  background: var(--gbi-card-bg);
   border: 1px solid var(--gbi-border);
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--gbi-text);
-  padding: 4px 7px;
-  font-size: 11.5px;
+  padding: 3px 6px;
+  font-size: 11px;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.12s ease;
 }
 
 .gbi-number-input {
-  width: 44px;
+  width: 38px;
   text-align: center;
   font-family: var(--gbi-mono);
 }
@@ -497,46 +485,38 @@
   border-color: var(--gbi-border-focus);
 }
 
-/* Inline action button (Go to Images) */
 .gbi-inline-link-btn {
-  background: var(--gbi-surface);
+  background: var(--gbi-surface-hover);
   border: 1px solid var(--gbi-border);
   color: var(--gbi-primary);
-  font-size: 10.5px;
+  font-size: 10px;
   cursor: pointer;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  transition: all 0.15s ease;
-  white-space: nowrap;
+  transition: all 0.12s ease;
 }
 
 .gbi-inline-link-btn:hover {
-  background: var(--gbi-surface-hover);
-  border-color: var(--gbi-border-hover);
-  color: #60a5fa;
-  transform: translateY(-1px);
+  border-color: var(--gbi-primary);
 }
 
-/* Secondary Full-Width Button */
 .gbi-btn-secondary {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 7px 10px;
+  padding: 5px 8px;
   background: var(--gbi-surface);
   border: 1px solid var(--gbi-border);
-  border-radius: 7px;
+  border-radius: 5px;
   color: var(--gbi-text);
-  font-size: 11.5px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 .gbi-btn-secondary:hover {
@@ -544,74 +524,70 @@
   border-color: var(--gbi-border-hover);
 }
 
-/* Theme Toggle Pills */
 .gbi-theme-toggle-group {
   display: flex;
-  background: var(--gbi-surface);
+  background: var(--gbi-card-bg);
   border: 1px solid var(--gbi-border);
-  border-radius: 6px;
-  padding: 2px;
-  gap: 2px;
+  border-radius: 5px;
+  padding: 1px;
 }
 
 .gbi-theme-pill-btn {
   background: transparent;
   border: none;
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: 4px;
-  font-size: 10.5px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 500;
   color: var(--gbi-text-sub);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 .gbi-theme-pill-btn.active {
-  background: var(--gbi-primary-gradient);
+  background: var(--gbi-primary);
   color: #fff;
 }
 
 /* ==========================================================================
-   6. Editor Container
+   7. Editor Container
    ========================================================================== */
 .gbi-input-container {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .gbi-editor-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2px;
+  padding: 0 1px;
 }
 
 .gbi-count-badge {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 500;
   color: var(--gbi-text-sub);
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  font-family: var(--gbi-mono);
 }
 
 .gbi-editor-tools {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .gbi-tool-btn {
-  background: var(--gbi-surface);
+  background: transparent;
   border: 1px solid var(--gbi-border);
   color: var(--gbi-text-sub);
-  font-size: 10.5px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 .gbi-tool-btn:hover {
@@ -623,49 +599,48 @@
 .gbi-editor-wrapper {
   display: flex;
   position: relative;
-  background: var(--gbi-card-bg);
+  background: var(--gbi-surface);
   border: 1px solid var(--gbi-border);
-  border-radius: 9px;
+  border-radius: 7px;
   overflow: hidden;
-  height: 185px;
-  min-height: 150px;
-  max-height: 480px;
+  height: 160px;
+  min-height: 120px;
+  max-height: 420px;
   resize: vertical;
   box-sizing: border-box;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.12s ease;
 }
 
 .gbi-editor-wrapper:focus-within {
   border-color: var(--gbi-border-focus);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
 }
 
 .gbi-line-numbers {
-  min-width: 28px;
-  padding: 8px 6px 16px 8px;
-  background: rgba(0, 0, 0, 0.18);
+  min-width: 26px;
+  padding: 7px 5px 12px 6px;
+  background: rgba(0, 0, 0, 0.12);
   border-right: 1px solid var(--gbi-border);
   color: var(--gbi-text-muted);
   font-family: var(--gbi-mono);
-  font-size: 11px;
-  line-height: 20px;
+  font-size: 10.5px;
+  line-height: 19px;
   text-align: right;
   user-select: none;
   pointer-events: none;
   overflow: hidden;
   box-sizing: border-box;
-  opacity: 0.8;
+  opacity: 0.75;
   height: 100%;
   flex-shrink: 0;
 }
 
 #gbi-main-panel.gbi-theme-light .gbi-line-numbers {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .gbi-ln {
-  height: 20px;
-  line-height: 20px;
+  height: 19px;
+  line-height: 19px;
   box-sizing: border-box;
 }
 
@@ -674,13 +649,13 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: 8px 10px;
+  padding: 7px 9px;
   background: transparent;
   border: none;
   color: var(--gbi-text);
   font-family: var(--gbi-mono);
-  font-size: 11.5px;
-  line-height: 20px;
+  font-size: 11px;
+  line-height: 19px;
   resize: none;
   outline: none;
   white-space: pre !important;
@@ -698,36 +673,35 @@
 }
 
 .gbi-textarea::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 .gbi-textarea::-webkit-scrollbar-thumb {
   background: var(--gbi-border-hover);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 /* ==========================================================================
-   7. Action Controls
+   8. Action Controls
    ========================================================================== */
 .gbi-controls {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 
 .gbi-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 7px 12px;
+  border-radius: 6px;
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 500;
   cursor: pointer;
   border: none;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease;
 }
 
 .gbi-btn:active {
@@ -736,103 +710,87 @@
 
 .gbi-btn-primary {
   flex: 1;
-  background: var(--gbi-primary-gradient);
+  background: var(--gbi-primary);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
 }
 
 .gbi-btn-primary:hover {
   background: var(--gbi-primary-hover);
-  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.45);
-  transform: translateY(-1px);
 }
 
 .gbi-btn-pause {
   flex: 1;
-  background: var(--gbi-pause-gradient);
+  background: var(--gbi-pause);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
 }
 
 .gbi-btn-pause:hover {
-  transform: translateY(-1px);
+  background: var(--gbi-pause-hover);
 }
 
 .gbi-btn-stop {
-  background: var(--gbi-danger-bg);
-  border: 1px solid var(--gbi-danger-border);
-  color: var(--gbi-danger);
-}
-
-.gbi-btn-stop:hover:not(:disabled) {
-  background: var(--gbi-danger);
-  color: #fff;
-  border-color: var(--gbi-danger);
-}
-
-.gbi-btn-stop:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.gbi-btn-clear {
   background: var(--gbi-surface);
   border: 1px solid var(--gbi-border);
   color: var(--gbi-text-sub);
 }
 
-.gbi-btn-clear:hover {
-  background: var(--gbi-surface-hover);
-  color: var(--gbi-text);
-  border-color: var(--gbi-border-hover);
+.gbi-btn-stop:hover:not(:disabled) {
+  background: var(--gbi-danger-bg);
+  border-color: var(--gbi-danger-border);
+  color: var(--gbi-danger);
+}
+
+.gbi-btn-stop:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 /* ==========================================================================
-   8. Status & Progress Bar
+   9. Status & Hairline Progress
    ========================================================================== */
 .gbi-status-card {
   background: var(--gbi-surface);
   border: 1px solid var(--gbi-border);
-  border-radius: 8px;
-  padding: 8px 10px;
+  border-radius: 6px;
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .gbi-progress-track {
   width: 100%;
-  height: 5px;
+  height: 3px;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
 }
 
 #gbi-main-panel.gbi-theme-light .gbi-progress-track {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .gbi-progress-bar {
   height: 100%;
   width: 0%;
-  background: var(--gbi-primary-gradient);
-  border-radius: 4px;
-  transition: width 0.3s ease;
+  background: var(--gbi-primary);
+  border-radius: 2px;
+  transition: width 0.25s ease;
 }
 
 .gbi-status-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
 }
 
 .gbi-status-text {
-  font-size: 11px;
-  color: var(--gbi-text);
+  font-size: 10.5px;
+  color: var(--gbi-text-sub);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -840,9 +798,9 @@
 }
 
 .gbi-spinner {
-  width: 11px;
-  height: 11px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   border-top-color: var(--gbi-primary);
   border-radius: 50%;
   animation: gbi-spin 0.8s linear infinite;
@@ -860,30 +818,30 @@
 }
 
 .gbi-progress-percent {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--gbi-text-sub);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gbi-text-muted);
   font-family: var(--gbi-mono);
 }
 
 /* ==========================================================================
-   9. Queue Accordion
+   10. Queue Accordion
    ========================================================================== */
 .gbi-queue-accordion {
   border-top: 1px solid var(--gbi-border);
-  padding-top: 6px;
+  padding-top: 5px;
 }
 
 .gbi-queue-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 500;
   color: var(--gbi-text-sub);
   cursor: pointer;
-  padding: 2px 2px;
-  transition: color 0.15s ease;
+  padding: 1px 2px;
+  transition: color 0.12s ease;
 }
 
 .gbi-queue-header:hover {
@@ -891,39 +849,51 @@
 }
 
 .gbi-queue-list {
-  max-height: 110px;
+  max-height: 100px;
   overflow-y: auto;
   display: none;
   flex-direction: column;
-  gap: 3px;
-  margin-top: 6px;
+  gap: 2px;
+  margin-top: 5px;
+}
+
+.gbi-queue-list::-webkit-scrollbar {
+  width: 3px;
+}
+.gbi-queue-list::-webkit-scrollbar-thumb {
+  background: var(--gbi-border);
+  border-radius: 2px;
 }
 
 .gbi-queue-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 7px;
-  border-radius: 6px;
+  padding: 3px 6px;
+  border-radius: 4px;
   background: var(--gbi-surface);
-  font-size: 11px;
-  gap: 6px;
+  font-size: 10px;
+  gap: 5px;
 }
 
 .gbi-queue-item.gbi-item-active {
-  background: rgba(59, 130, 246, 0.15);
+  background: rgba(59, 130, 246, 0.12);
   color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.25);
 }
 
 .gbi-queue-item.gbi-item-done {
-  opacity: 0.65;
+  opacity: 0.55;
 }
 
 .gbi-queue-item.gbi-item-error {
   background: var(--gbi-danger-bg);
   color: #fca5a5;
   border: 1px solid var(--gbi-danger-border);
+}
+
+.gbi-queue-num {
+  font-family: var(--gbi-mono);
 }
 
 .gbi-queue-text {

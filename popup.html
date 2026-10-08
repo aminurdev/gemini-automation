@@ -11,84 +11,68 @@
     <!-- Header -->
     <header class="popup-top">
       <div class="title-group">
-        <div class="logo-icon">✨</div>
+        <div class="logo-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+          </svg>
+        </div>
         <div class="title-text-wrap">
           <span class="app-name">Bulk Prompts</span>
-          <span class="app-subtitle">Gemini Image Automator</span>
+          <span class="app-subtitle">Gemini Automator</span>
         </div>
       </div>
       <div class="header-right">
-        <button id="btn-theme-toggle" class="theme-icon-btn" title="Toggle Theme (Dark / Light)">🌙</button>
+        <button id="btn-theme-toggle" class="theme-icon-btn" title="Toggle Theme">🌙</button>
         <span class="ver-pill">v1.1</span>
       </div>
     </header>
 
     <!-- Main Content -->
     <main class="popup-content">
-      <!-- Status Banner -->
+      <!-- Status Chip -->
       <div class="status-banner">
         <span class="pulse-indicator"></span>
-        <span class="status-label">Automation Active on Gemini</span>
+        <span class="status-label">Active on Gemini</span>
       </div>
 
       <!-- Primary Action -->
       <button id="btn-open-gemini" class="open-btn">
-        <span class="btn-left">
-          <span class="btn-icon">🚀</span>
-          <span class="btn-text">Open Gemini Images</span>
-        </span>
-        <span class="btn-arrow">↗</span>
+        <span class="btn-text">Open Gemini Images</span>
+        <svg class="btn-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
       </button>
 
-      <!-- Workflow Pipeline Overview -->
+      <!-- Minimal Stepper Overview -->
       <div class="workflow-card">
-        <div class="workflow-header">
-          <span class="workflow-title">⚡ Automated Pipeline</span>
-          <span class="workflow-badge">3 Steps</span>
-        </div>
         <div class="pipeline-steps">
           <div class="step-item">
             <span class="step-num">1</span>
-            <div class="step-desc">
-              <b>Images Menu</b>
-              <span>Auto-clicks side nav for fresh session</span>
-            </div>
+            <span class="step-text">Images Canvas</span>
           </div>
+          <span class="step-divider">›</span>
           <div class="step-item">
             <span class="step-num">2</span>
-            <div class="step-desc">
-              <b>Prompt & Generate</b>
-              <span>Types prompt & triggers generation</span>
-            </div>
+            <span class="step-text">Queue Run</span>
           </div>
+          <span class="step-divider">›</span>
           <div class="step-item">
             <span class="step-num">3</span>
-            <div class="step-desc">
-              <b>Auto-Download</b>
-              <span>Saves high-res image & loops to next</span>
-            </div>
+            <span class="step-text">Auto-Save</span>
           </div>
         </div>
       </div>
 
-      <!-- Quick Tips -->
+      <!-- Micro Note -->
       <div class="quick-hints">
-        <div class="hint-item">
-          <span class="hint-icon">📌</span>
-          <span>Floating widget docks directly in Gemini's corner</span>
-        </div>
-        <div class="hint-item">
-          <span class="hint-icon">📝</span>
-          <span>Supports line numbers, cooldown delays & auto-retry</span>
-        </div>
+        <span>Widget docks directly on gemini.google.com</span>
       </div>
     </main>
 
     <!-- Footer -->
     <footer class="popup-footer">
-      <span>Gemini Bulk Generator</span>
-      <span class="footer-dot">•</span>
-      <span>Single-Flight Safe</span>
+      <span>Ready to generate</span>
     </footer>
   </div>
   <script src="popup.js"></script>
