@@ -12,6 +12,7 @@
 
   // State Management
   const state = {
+    isEnabled: true,
     prompts: [],
     currentIndex: 0,
     isRunning: false,
@@ -36,7 +37,7 @@
   // ==========================================
   function loadSavedState() {
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get(['gbi_prompts', 'gbi_config', 'gbi_position', 'gbi_theme'], (res) => {
+      chrome.storage.local.get(['gbi_prompts', 'gbi_config', 'gbi_position', 'gbi_theme', 'gbi_enabled'], (res) => {
         if (res.gbi_prompts && typeof res.gbi_prompts === 'string') {
           const textarea = document.getElementById('gbi-prompts-input');
           if (textarea && !textarea.value) {
@@ -90,6 +91,9 @@
             document.querySelector('.lm-enabled') !== null ||
             (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
           setTheme(isGeminiLight ? 'light' : 'dark');
+        }
+        if (res.gbi_enabled !== undefined) {
+          applyEnabledState(res.gbi_enabled);
         }
       });
     }
@@ -1039,7 +1043,6 @@ const SAMPLE_PROMPTS = [
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
               <b>Reset via Images</b>
-              <span>Clicks Images menu each prompt</span>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
               <button type="button" class="gbi-inline-link-btn" id="gbi-jump-images-btn" title="Click 'Images' now">Go ↗</button>
@@ -1054,7 +1057,6 @@ const SAMPLE_PROMPTS = [
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
               <b>Auto-download</b>
-              <span>Save high-res output</span>
             </div>
             <label class="gbi-switch">
               <input type="checkbox" id="gbi-autodownload-cb" checked>
@@ -1065,7 +1067,6 @@ const SAMPLE_PROMPTS = [
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
               <b>Auto-scroll</b>
-              <span>Keep images in view</span>
             </div>
             <label class="gbi-switch">
               <input type="checkbox" id="gbi-autoscroll-cb" checked>
@@ -1076,7 +1077,6 @@ const SAMPLE_PROMPTS = [
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
               <b>Cooldown delay</b>
-              <span>Seconds between prompts</span>
             </div>
             <div style="display:flex; align-items:center; gap:4px;">
               <input type="number" class="gbi-number-input" id="gbi-delay-input" min="2" max="60" value="8">
@@ -1088,7 +1088,6 @@ const SAMPLE_PROMPTS = [
           <div class="gbi-config-row">
             <div class="gbi-config-label-group">
               <b>Prepend prefix</b>
-              <span>Add prefix to each prompt</span>
             </div>
             <label class="gbi-switch">
               <input type="checkbox" id="gbi-prefix-cb" checked>
@@ -1176,6 +1175,11 @@ const SAMPLE_PROMPTS = [
     bindUIEvents();
     loadSavedState();
     updateLineNumbers();
+
+    if (!state.isEnabled) {
+      panel.classList.add('gbi-disabled-hidden');
+      pill.classList.add('gbi-disabled-hidden');
+    }
   }
 
   function bindUIEvents() {
@@ -1445,6 +1449,26 @@ const SAMPLE_PROMPTS = [
     }
   }
 
+  function applyEnabledState(enabled) {
+    state.isEnabled = enabled !== false;
+    const panel = document.getElementById('gbi-main-panel');
+    const pill = document.getElementById('gbi-floating-pill');
+
+    if (!state.isEnabled) {
+      if (state.isRunning) {
+        stopQueue();
+      }
+      if (panel) panel.classList.add('gbi-disabled-hidden');
+      if (pill) pill.classList.add('gbi-disabled-hidden');
+    } else {
+      if (panel) panel.classList.remove('gbi-disabled-hidden');
+      if (pill) pill.classList.remove('gbi-disabled-hidden');
+      if (!panel) {
+        createUI();
+      }
+    }
+  }
+
   function setupDraggable() {
     const header = document.getElementById('gbi-header-drag');
     const panel = document.getElementById('gbi-main-panel');
@@ -1675,8 +1699,27 @@ const SAMPLE_PROMPTS = [
     createUI();
   }
 
+  // Storage & Message Listeners for ON/OFF toggle
+  if (typeof chrome !== 'undefined') {
+    if (chrome.storage && chrome.storage.onChanged) {
+      chrome.storage.onChanged.addListener((changes, area) => {
+        if (area === 'local' && changes.gbi_enabled !== undefined) {
+          applyEnabledState(changes.gbi_enabled.newValue);
+        }
+      });
+    }
+    if (chrome.runtime && chrome.runtime.onMessage) {
+      chrome.runtime.onMessage.addListener((msg) => {
+        if (msg && msg.type === 'GBI_SET_ENABLED') {
+          applyEnabledState(msg.enabled);
+        }
+      });
+    }
+  }
+
   // Fallback observer to ensure UI remains attached during client-side routing
   setInterval(() => {
+    if (!state.isEnabled) return;
     if (!document.getElementById('gbi-main-panel')) {
       createUI();
     }

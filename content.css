@@ -167,6 +167,11 @@
   display: none !important;
 }
 
+#gbi-main-panel.gbi-disabled-hidden,
+#gbi-floating-pill.gbi-disabled-hidden {
+  display: none !important;
+}
+
 /* ==========================================================================
    3. Header
    ========================================================================== */
@@ -392,18 +397,15 @@
 
 .gbi-config-label-group {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .gbi-config-label-group b {
   font-size: 11px;
   color: var(--gbi-text);
   font-weight: 500;
-}
-
-.gbi-config-label-group span {
-  font-size: 9.5px;
-  color: var(--gbi-text-muted);
+  white-space: nowrap;
 }
 
 /* Sleek Minimal Switch */
